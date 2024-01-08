@@ -19,7 +19,6 @@ syllabus.pdf: syllabus.md
 
 syllabus.md: syllabus_main.md syllabus_classes.md syllabus_policies.md
 	cat syllabus_main.md syllabus_classes.md syllabus_policies.md > syllabus.md
-	$(PANDOC) syllabus.md -t gfm -o README.md
 
 README.md: syllabus.md
 	$(PANDOC) syllabus.md -t gfm -o README.md

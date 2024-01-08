@@ -1,4 +1,4 @@
-![](assets/cases.jpg) 
+![](assets/deaths.jpg) 
 
 # Course information
 
@@ -224,19 +224,22 @@ The following are some popular books on R. PDFs are available for “check
 out” on the [Canvas website](https://uk.instructure.com/courses/2077222)
 under “Modules: References”.
 
+- Chang, Winston. 2013. R Graphics Cookbook. O’Reilly
 - Crawley, Michael J.. 2005. Statistics: An Introduction using R. Wiley
 - Dalgaard, Peter. 2008. Introductory Statistics with R. Springer
-- Murrell, Paul. 2011. R Graphics. CRC Press
-- Chang, Winston. 2013. R Graphics Cookbook. O’Reilly
 - Gandrud, Christopher. 2015. Reproducible Research with R and R Studio.
   CRC Press.
-- Zelterman, Daniel. 2015. Applied Multivariate Statistics with R.
-  Springer
+- Kolaczyk, Eric D. and Csárdi, Gábor. 2020. Statistical Analysis of
+  Network Data with R (2e). Springer
+- Mailund, Thomas. 2017. Beginning Data Science in R. Apress
+- Murrell, Paul. 2011. R Graphics. CRC Press
 - Phillips, Nathaniel. 2016. YaRrr! The Pirate’s Guide to R.
 - Wickham, Hadley. 2016. ggplot2. Springer
 - Wickham, Hadley and Grolemund, Garrett. 2017. R for Data Science.
   O’Reilly
-- Mailund, Thomas. 2017. Beginning Data Science in R. Apress
+- Wilkinson, Leland. 2005. The Grammar of Graphics. Springer
+- Zelterman, Daniel. 2015. Applied Multivariate Statistics with R.
+  Springer
 
 ## Internet
 
@@ -275,7 +278,8 @@ as the semester progress.
 | 11   | 03/26 & 03/28 | Networks                                            |
 | 12   | 04/02 & 04/04 | Visualizing/analyzing lots of data                  |
 | 13   | 04/09 & 04/11 | Visualizing/analyzing lots of data                  |
-| 14   | 04/16 & 04/18 | Project presentations                               |
+| 14   | 04/16         |                                                     |
+|      | 04/18         | Project presentations                               |
 | 15   | 04/23         | Project presentations                               |
 
 # Course policies

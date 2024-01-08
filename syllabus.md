@@ -3,7 +3,7 @@ title: BIO 580 – Data Wrangling and Visualization (in R)
 colorlinks: true
 ---
 
-![](assets/cases.jpg)\	
+![](assets/deaths.jpg)\	
 
 [github site]: https://github.com/vancleve/BIO580-DWVR
 [canvas site]: https://uk.instructure.com/courses/2077222
@@ -26,7 +26,15 @@ colorlinks: true
 
 # Course description
 
-The last 20 years have seen data science emerge as a field from data intensive work in other fields such as statistics, biology, physics, engineering, history, and journalism. This three-credit course aims to provide a brief introduction to data science and analyzing and visualizing data. As data science using R, Python, Julia, and other scripting languages has become more popular, so have the tools required to document, maintain, share, and replicate analyses and visualization. These activities constitute “literate programming” and “reproducible research”, and we will use some of these tools in order to produce replicable and publishable reports.
+The last 20 years have seen data science emerge as a field from data intensive
+work in other fields such as statistics, biology, physics, engineering, history,
+and journalism. This three-credit course aims to provide a brief introduction to
+data science and analyzing and visualizing data. As data science using R,
+Python, Julia, and other scripting languages has become more popular, so have
+the tools required to document, maintain, share, and replicate analyses and
+visualization. These activities constitute “literate programming” and
+“reproducible research”, and we will use some of these tools in order to produce
+replicable and publishable reports.
 
 # Prerequisites:
 
@@ -209,17 +217,19 @@ The following are some popular books on R. PDFs are available for “check out�
 the [Canvas website][canvas site] under “Modules:
 References”.
 
+-   Chang, Winston. 2013. R Graphics Cookbook. O’Reilly
 -   Crawley, Michael J.. 2005. Statistics: An Introduction using R. Wiley
 -   Dalgaard, Peter. 2008. Introductory Statistics with R. Springer
--   Murrell, Paul. 2011. R Graphics. CRC Press
--   Chang, Winston. 2013. R Graphics Cookbook. O’Reilly
 -   Gandrud, Christopher. 2015. Reproducible Research with R and R Studio. CRC
     Press.
--   Zelterman, Daniel. 2015. Applied Multivariate Statistics with R. Springer
+-   Kolaczyk, Eric D. and Csárdi, Gábor. 2020. Statistical Analysis of Network Data with R (2e). Springer
+-   Mailund, Thomas. 2017. Beginning Data Science in R. Apress
+-   Murrell, Paul. 2011. R Graphics. CRC Press
 -   Phillips, Nathaniel. 2016. YaRrr! The Pirate’s Guide to R.
 -   Wickham, Hadley. 2016. ggplot2. Springer
 -   Wickham, Hadley and Grolemund, Garrett. 2017. R for Data Science. O’Reilly
--   Mailund, Thomas. 2017. Beginning Data Science in R. Apress
+-   Wilkinson, Leland. 2005. The Grammar of Graphics. Springer
+-   Zelterman, Daniel. 2015. Applied Multivariate Statistics with R. Springer
 
 ## Internet
 
@@ -257,7 +267,8 @@ as the semester progress.
 | 11   | 03/26 & 03/28 | Networks                                            |
 | 12   | 04/02 & 04/04 | Visualizing/analyzing lots of data                  |
 | 13   | 04/09 & 04/11 | Visualizing/analyzing lots of data                  |
-| 14   | 04/16 & 04/18 | Project presentations                               |
+| 14   | 04/16         |                                                     |
+|      | 04/18         | Project presentations                               |
 | 15   | 04/23         | Project presentations                               |
 
 # Course policies
@@ -271,7 +282,9 @@ IX compliance.
 
 ## Unexcused absences and late work
 
-Unexcused absences will result in a decrease in the attendance grade and cannot be made up. Unexcused late work may be submitted but will be subject to a 20% penalty. 
+Unexcused absences will result in a decrease in the attendance grade and cannot
+be made up. Unexcused late work may be submitted but will be subject to a 20%
+penalty.
 
 ## Diversity and inclusion
 
@@ -282,9 +295,9 @@ national origin, religion, and political beliefs students and instructors will
 not be tolerated. Please report any concerning conduct to the instructor.
 
 The University of Kentucky Senate Council Statement on Diversity, Equity, and
-Inclusion includes important additional language and information that applies to this
-course. Please refer to to [this link for
-the full statement](https://www.uky.edu/universitysenate/syllabus-dei).
+Inclusion includes important additional language and information that applies to
+this course. Please refer to to [this link for the full
+statement](https://www.uky.edu/universitysenate/syllabus-dei).
 
 ## Face covering/distancing policy
 
