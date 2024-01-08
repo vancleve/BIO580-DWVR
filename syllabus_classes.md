@@ -19,5 +19,6 @@ as the semester progress.
 | 11   | 03/26 & 03/28 | Networks                                            |
 | 12   | 04/02 & 04/04 | Visualizing/analyzing lots of data                  |
 | 13   | 04/09 & 04/11 | Visualizing/analyzing lots of data                  |
-| 14   | 04/16 & 04/18 | Project presentations                               |
+| 14   | 04/16         |                                                     |
+|      | 04/18         | Project presentations                               |
 | 15   | 04/23         | Project presentations                               |

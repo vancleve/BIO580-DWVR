@@ -3,7 +3,7 @@ title: BIO 580 – Data Wrangling and Visualization (in R)
 colorlinks: true
 ---
 
-![](assets/cases.jpg)\	
+![](assets/deaths.jpg)\	
 
 [github site]: https://github.com/vancleve/BIO580-DWVR
 [canvas site]: https://uk.instructure.com/courses/2077222
@@ -26,7 +26,15 @@ colorlinks: true
 
 # Course description
 
-The last 20 years have seen data science emerge as a field from data intensive work in other fields such as statistics, biology, physics, engineering, history, and journalism. This three-credit course aims to provide a brief introduction to data science and analyzing and visualizing data. As data science using R, Python, Julia, and other scripting languages has become more popular, so have the tools required to document, maintain, share, and replicate analyses and visualization. These activities constitute “literate programming” and “reproducible research”, and we will use some of these tools in order to produce replicable and publishable reports.
+The last 20 years have seen data science emerge as a field from data intensive
+work in other fields such as statistics, biology, physics, engineering, history,
+and journalism. This three-credit course aims to provide a brief introduction to
+data science and analyzing and visualizing data. As data science using R,
+Python, Julia, and other scripting languages has become more popular, so have
+the tools required to document, maintain, share, and replicate analyses and
+visualization. These activities constitute “literate programming” and
+“reproducible research”, and we will use some of these tools in order to produce
+replicable and publishable reports.
 
 # Prerequisites:
 
@@ -209,17 +217,19 @@ The following are some popular books on R. PDFs are available for “check out�
 the [Canvas website][canvas site] under “Modules:
 References”.
 
+-   Chang, Winston. 2013. R Graphics Cookbook. O’Reilly
 -   Crawley, Michael J.. 2005. Statistics: An Introduction using R. Wiley
 -   Dalgaard, Peter. 2008. Introductory Statistics with R. Springer
--   Murrell, Paul. 2011. R Graphics. CRC Press
--   Chang, Winston. 2013. R Graphics Cookbook. O’Reilly
 -   Gandrud, Christopher. 2015. Reproducible Research with R and R Studio. CRC
     Press.
--   Zelterman, Daniel. 2015. Applied Multivariate Statistics with R. Springer
+-   Kolaczyk, Eric D. and Csárdi, Gábor. 2020. Statistical Analysis of Network Data with R (2e). Springer
+-   Mailund, Thomas. 2017. Beginning Data Science in R. Apress
+-   Murrell, Paul. 2011. R Graphics. CRC Press
 -   Phillips, Nathaniel. 2016. YaRrr! The Pirate’s Guide to R.
 -   Wickham, Hadley. 2016. ggplot2. Springer
 -   Wickham, Hadley and Grolemund, Garrett. 2017. R for Data Science. O’Reilly
--   Mailund, Thomas. 2017. Beginning Data Science in R. Apress
+-   Wilkinson, Leland. 2005. The Grammar of Graphics. Springer
+-   Zelterman, Daniel. 2015. Applied Multivariate Statistics with R. Springer
 
 ## Internet
 

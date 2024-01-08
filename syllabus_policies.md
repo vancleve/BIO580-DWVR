@@ -10,7 +10,9 @@ IX compliance.
 
 ## Unexcused absences and late work
 
-Unexcused absences will result in a decrease in the attendance grade and cannot be made up. Unexcused late work may be submitted but will be subject to a 20% penalty. 
+Unexcused absences will result in a decrease in the attendance grade and cannot
+be made up. Unexcused late work may be submitted but will be subject to a 20%
+penalty.
 
 ## Diversity and inclusion
 
@@ -21,9 +23,9 @@ national origin, religion, and political beliefs students and instructors will
 not be tolerated. Please report any concerning conduct to the instructor.
 
 The University of Kentucky Senate Council Statement on Diversity, Equity, and
-Inclusion includes important additional language and information that applies to this
-course. Please refer to to [this link for
-the full statement](https://www.uky.edu/universitysenate/syllabus-dei).
+Inclusion includes important additional language and information that applies to
+this course. Please refer to to [this link for the full
+statement](https://www.uky.edu/universitysenate/syllabus-dei).
 
 ## Face covering/distancing policy
 
