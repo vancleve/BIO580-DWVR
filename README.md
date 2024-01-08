@@ -2,33 +2,32 @@
 
 # Course information
 
-|                    |                                                              |
-|--------------------|--------------------------------------------------------------|
-| **Instructor**     | Dr. Jeremy Van Cleve                                         |
-| **E-mail**         | <jvancleve@uky.edu>                                          |
-| **Phone**          | \(859\) 218-3020                                             |
-| **Office**         | 216 THM                                                      |
-| **Office hours**   | By appointment via e-mail                                    |
-|                    |                                                              |
-| **Credits**        | 3                                                            |
-| **Class Time**     | TBD                                                          |
-| **Class Location** | JSB 357                                                      |
-| **Website**        | <https://github.com/vancleve/BIO540-DWVR> (github website)   |
-|                    | <https://uk.instructure.com/courses/000000> (Canvas website) |
+|                    |                                                               |
+|--------------------|---------------------------------------------------------------|
+| **Instructor**     | Dr. Jeremy Van Cleve                                          |
+| **E-mail**         | <jvancleve@uky.edu>                                           |
+| **Phone**          | \(859\) 218-3020                                              |
+| **Office**         | 216 THM                                                       |
+| **Office hours**   | By appointment via e-mail                                     |
+|                    |                                                               |
+| **Credits**        | 3                                                             |
+| **Class Time**     | Tue/Thur 12:30pm-1:45pm                                       |
+| **Class Location** | JSB 357                                                       |
+| **Website**        | <https://github.com/vancleve/BIO580-DWVR> (github website)    |
+|                    | <https://uk.instructure.com/courses/2077222> (Canvas website) |
 
 # Course description
 
-The last 20 years have seen the [R programming
-language](https://www.r-project.org/) rise in popularity from a language
-used and developed primarily by statisticians to one used and developed
-by anyone interested in analyzing and visualizing data from scientists
-and engineers to historians and journalists. This **three-credit**
-course aims to provide a brief introduction to using R for analyzing and
-visualizing data. As R and other scripting languages have become more
-popular, so have the tools required to document, maintain, share, and
-replicate analyses and visualization. These activities constitute
-“literate programming” and “reproducible research”, and we will use some
-of these tools (particularly [`Quarto`](https://quarto.org/)).
+The last 20 years have seen data science emerge as a field from data
+intensive work in other fields such as statistics, biology, physics,
+engineering, history, and journalism. This three-credit course aims to
+provide a brief introduction to data science and analyzing and
+visualizing data. As data science using R, Python, Julia, and other
+scripting languages has become more popular, so have the tools required
+to document, maintain, share, and replicate analyses and visualization.
+These activities constitute “literate programming” and “reproducible
+research”, and we will use some of these tools in order to produce
+replicable and publishable reports.
 
 # Prerequisites:
 
@@ -51,9 +50,9 @@ of these tools (particularly [`Quarto`](https://quarto.org/)).
 
 # Course format
 
-Each week will consist of a short introduction and interactive
-demonstration of the concepts and tools for that week followed by a
-short lab where students apply the concepts and tools. There may be
+Each week will consist of a introduction and interactive demonstration
+of the concepts and tools for that week on Tuesday followed by a lab
+where students apply the concepts and tools on Thursday. There may be
 preliminary readings to do before class for some weeks (see “Topic
 schedule” below and check back for updates); please make sure to do
 those so that we make the most of time in class.
@@ -86,7 +85,7 @@ The assessment portion of the course has three components.
     these should be provided along with the `Quarto` markdown file (with
     last name `qmd`) by adding all the files to a single compressed
     `zip` file. The `qmd` or `zip` file should then be uploaded to the
-    [Canvas course website](https://uk.instructure.com/).
+    [Canvas course website](https://uk.instructure.com/courses/2077222).
 
 3.  **Data visualization project and presentation**. The last two weeks
     will be devoted to 8-10 minute presentations of **five** figures
@@ -104,7 +103,7 @@ The assessment portion of the course has three components.
     may help get you started.
 
     - Kaggle. <https://www.kaggle.com/datasets>. Datasets for practicing
-      machine
+      machine learning
     - Our World in Data. <https://ourworldindata.org/>. Lots of health,
       demographic, and cultural data from around the world.
     - Dryad Data Platform. <https://datadryad.org/>. Repository freely
@@ -150,7 +149,11 @@ with the following sections:
 5.  Conclusion: describe briefly what was learned from the analysis and
     visualization and propose a few next steps.
 
-## Tips for making sure I can run your R code.
+The presentation will constitute **25%** of the course grade and the
+written document **15%** of the course grade for a total of **40%** of
+the course grade for the data visualization project.
+
+## Tips for making sure everyone, including me, can run your R code.
 
 - For every assignment, create a separate folder for each assignment and
   put the `.qmd` file and all the other necessary files (data files,
@@ -161,12 +164,12 @@ with the following sections:
   directories begin simply the name of the file or subdirectory of the
   current directory (I use relative directories in all the course `.qmd`
   files). That is, **avoid** putting in full directories like
-  `C:\Documents\student\R\stuff\stuff.jpg` and instead simply put
-  `stuff.jpg` if its in the same directory as the `.qmd`.
+  `/home/jva38/class/week1/stuff.jpg` and instead simply put `stuff.jpg`
+  if its in the same directory as the `.qmd` file.
 - Make sure your analyses run without errors and your `.qmd` can be
   compiled into a `.html` file successfully by first typing
   `rm(list=ls())` into the R console and then compiling the file. This
-  will start your workspace from scratch and is also a good way of
+  clear your workspace of previous variables and is also a good way of
   preventing the problem where an analysis worked when you closed R but
   now doesn’t when you reopen it.
 
@@ -175,10 +178,10 @@ with the following sections:
 ## Classmates and instructor
 
 1.  **Please start a discussion** on the [Canvas
-    website](https://uk.instructure.com/). This will allow everyone to
-    benefit from the questions and answers posed. I will monitor this
-    discussion and post replies as necessary. Please also post your own
-    replies too!
+    website](https://uk.instructure.com/courses/2077222). This will
+    allow everyone to benefit from the questions and answers posed. I
+    will monitor this discussion and post replies as necessary. Please
+    also post your own replies too!
 2.  Instructor office hours.
 
 ## Internet
@@ -201,8 +204,8 @@ There are some recent books on data science and visualization (all
 written in `RMarkdown`, which is a predecessor and alternative to
 `Quarto`) that cover much of the material in the course.
 
-- Wickham, Hadley and Grolemund, Garrett. 2017/2023. R for Data Science.
-  O’Reilly. <http://r4ds.had.co.nz/>
+- Wickham, Hadley, Grolemund, Garrett, and Mine Çetinkaya-Rundel. 2023.
+  R for Data Science (2e). O’Reilly. <https://r4ds.hadley.nz/>
 - Wilke, Claus O. 2018. Fundamentals of Data Visualization.
   <https://clauswilke.com/dataviz/>
 - Healy, Kieran. 2018. Data Visualization: A Practical Introduction.
@@ -218,8 +221,8 @@ book is for you.
 - Wickham, Hadley. 2019. Advanced R. <https://adv-r.hadley.nz/>
 
 The following are some popular books on R. PDFs are available for “check
-out” on the [Canvas website](https://uk.instructure.com/) under
-“Modules: References”.
+out” on the [Canvas website](https://uk.instructure.com/courses/2077222)
+under “Modules: References”.
 
 - Crawley, Michael J.. 2005. Statistics: An Introduction using R. Wiley
 - Dalgaard, Peter. 2008. Introductory Statistics with R. Springer
@@ -246,8 +249,10 @@ out” on the [Canvas website](https://uk.instructure.com/) under
 - Other data visualization and wrangling courses:
   - “Visualizing Data” by Chris Adolph (UWashington):
     <http://faculty.washington.edu/cadolph/index.php?page=22>
-  - “Data wrangling, exploration, and analysis with R” by Jenny Bryan
-    (UBC): <http://stat545.com/>
+  - STAT 545: “Data wrangling, exploration, and analysis with R” by
+    Jenny Bryan (RStudio/UBC): <http://stat545.com/>
+  - Current UBC version of Stat 545:
+  - <https://stat545.stat.ubc.ca/course/>
 - DataCamp interactive courses. <http://www.datacamp.com>
 
 # Topic schedule
@@ -255,23 +260,23 @@ out” on the [Canvas website](https://uk.instructure.com/) under
 The following is the preliminary schedule of topics and will be adjusted
 as the semester progress.
 
-| Week | Class Dates | Topic                                               |
-|------|-------------|-----------------------------------------------------|
-| 1    |             | Intro to the course and markdown, and Quarto        |
-| 2    |             | Intro to R: data types, flow control, and functions |
-| 3    |             | Vectors, slicing, and map(ping)                     |
-| 4    |             | Getting data into R with data.frames                |
-| 5    |             | Tidy Data                                           |
-| 6    |             | Text manipulation: regular expressions              |
-| 7    |             | Introduction to plotting and `ggplot2`              |
-| 8    |             | Plot types in `ggplot2`                             |
-| 9    |             | Principles of displaying data & how to modify plots |
-| 10   |             | Colors and heat maps                                |
-| 11   |             | Networks                                            |
-| 12   |             | Visualizing/analyzing lots of data                  |
-| 13   |             | Visualizing/analyzing lots of data                  |
-| 14   |             | Project presentations                               |
-| 15   |             | Project presentations                               |
+| Week | Class Dates   | Topic                                               |
+|------|---------------|-----------------------------------------------------|
+| 1    | 01/09 & 01/11 | Intro to the course and markdown, and Quarto        |
+| 2    | 01/16 & 01/18 | Intro to R: data types, flow control, and functions |
+| 3    | 01/23 & 01/25 | Vectors, slicing, and map(ping)                     |
+| 4    | 01/30 & 02/01 | Getting data into R with data.frames                |
+| 5    | 02/06 & 02/08 | Tidy Data                                           |
+| 6    | 02/13 & 02/15 | Text manipulation: regular expressions              |
+| 7    | 02/20 & 02/22 | Introduction to plotting and `ggplot2`              |
+| 8    | 02/27 & 02/29 | Plot types in `ggplot2`                             |
+| 9    | 03/05 & 03/07 | Principles of displaying data & how to modify plots |
+| 10   | 03/19 & 03/21 | Colors and heat maps                                |
+| 11   | 03/26 & 03/28 | Networks                                            |
+| 12   | 04/02 & 04/04 | Visualizing/analyzing lots of data                  |
+| 13   | 04/09 & 04/11 | Visualizing/analyzing lots of data                  |
+| 14   | 04/16 & 04/18 | Project presentations                               |
+| 15   | 04/23         | Project presentations                               |
 
 # Course policies
 
@@ -317,7 +322,7 @@ statement](https://www.uky.edu/universitysenate/syllabus-dei).
   possible.
 
 - More information about COVID-19 and UK can be found here:
-  <https://coronavirus.uky.edu/>
+  <https://www.uky.edu/covid-19/>
 
 ## University resources
 
@@ -331,7 +336,7 @@ Per university policy, students shall not plagiarize, cheat, or falsify
 or misuse academic records. Students are expected to adhere to
 University policy on cheating and plagiarism in all courses.
 
-Please the university policies on academic offenses,
+Please see the university policies on academic offenses,
 <https://www.uky.edu/universitysenate/ao>, for official descriptions of
 cheating and plagarism and the processes and penalties for violations of
 the policies.
