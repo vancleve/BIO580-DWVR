@@ -1,0 +1,237 @@
+---
+title: 'BIO 621: Data Wrangling and Analysis Using R'
+author: "Jeremy Van Cleve"
+date: 09 01 2024
+format: 
+  html:
+    self-contained: true
+---
+
+[github site]: https://github.com/vancleve/BIO580-DWVR
+[canvas site]: https://uk.instructure.com/courses/2077222
+
+0. I was an R newbie too!
+1. Go over syllabus
+2. Install R and RStudio
+3. What is R?
+4. What are Markdown and R Markdown?
+
+# Syllabus
+
+- The syllabus will be located here: <https://github.com/vancleve/BIO580-DWVR>.
+- This is also where R and R Markdown / Quarto documents will be located. The only files that will be kept on the [Canvas site][canvas site] are the PDF copies of the reference books and the completed labs and figures that you submit.
+- I'll update the syllabus and schedule of topics as necessary.
+
+# Install R, RStudio, and Quartio
+
+## Local installation
+
+We will use R, RStudio, and Quarto via a server and will not have to install them locally on our computers. However, if you would like to do so, here are some brief instructions.
+
+First step, download R, RStudio, and Quarto
+- To download R, go here: <https://cran.r-project.org/>.
+- To download RStudio, go here: <https://posit.co/download/rstudio-desktop/>
+- To download Quarto, go here: <https://quarto.org/docs/get-started/>.
+
+If you need directions, this may help: <https://quarto.org/docs/get-started/hello/rstudio.html>. If you already have R and need to update your packages, go here: <https://stat545.com/install.html> (these are a little dated now since the release of Quarto, but should still be helpful).
+
+## Server-based R, RStudio, and Quarto via Posit Workbench
+
+We have access to R, RStudio, and Quarto via the Posit Workbench software installed on a server. Go to this address, <https://rstudio.as.uky.edu>, and you should see a login screen like this:
+
+![Login screen for <https://rstudio.as.uky.edu>](assets/rstudio-as-uky-edu-login.jpg){width=50%}
+
+Use your **link blue** user name and password to login. RStudio should now be running in your browser and looks something like this:
+
+![RStudio in the browswer](assets/rstudio-server.jpg){width=50%}
+
+# Running RStudio
+
+## What is RStudio?
+
+RStudio is an Integrated Development Environment (IDE) for the R programming language.
+
+While you can write R code in any text editor you like and then run that code with the R interpreter, there are many things that an IDE can do that help you be more efficient when programming.
+
+@. Syntax highlighting
+@. **New** visual editor (WYSIWYM editing: <https://en.wikipedia.org/wiki/WYSIWYM>)
+@. File/project organization (see "Files" pane)
+@. Examining variables that you've set (see the "Environment" pane)
+@. Easily execute code and examine its text output (see "Console") or graphical output (see "Viewer")
+@. View help files (see "Help")
+@. Installing/updating R packages (see "Tools" menu)
+@. Debugging (see "Debug" menu)
+@. Projects (see "File" and "Tools")
+@. Version control (see "Tools" menu)
+
+When using RStudio, I encourage you to:
+
+1. Play around with different arrangements for the windows/panes
+
+2. **LEARN KEYBOARD SHORTCUTS**. They can make you much, much more efficient.
+
+    - Shift+Alt+K (MAC/PC): Keyboard shortcut quick reference.
+    - Shift+Command/Control+K (MAC/PC): Render (or "knit") current document (i.e., turn in HTML/DOCX/PDF)
+    - Command/Control+Enter (MAC/PC): Run selected lines
+    - Shift+Command/Control+Enter: Run current "chunk" (R Notebook only)
+    - etc
+
+3. Use a Project for all assignments in the course (save them in a single directory or its subdirectories).
+
+## Course files as a project
+
+The lecture notes and problems that are stored on the GitHub site can be loaded as an RStudio project. To do this, select "File"->"New Project"->"Version Control"->"Git" and enter "https://github.com/vancleve/BIO580-DWVR" in the "Repository URL:". Then select "Create Project". You should now see in the RStudio "Files" pane that the current directory is now "BIO580-DWVR" and the files are the same as the ones located on the GitHub repository.
+
+#### Updating the BIO580-DWVR project from the GitHub repository
+
+As more content like lecture notes are uploaded to the GitHub repository, you can update the files in your "BIO580-DWVR" folder by going to "Tools"->"Version Control"->"Pull Branches".
+
+## Tidyverse
+
+Many of the packages that packages that we will use have been helpfully collected together into a metapackage called `tidyverse`. Lucky for us, this is already installed on the RStudio server. If we needed to install it, we'd type the following at the console:
+
+```{r}
+#| eval: false
+install.packages("tidyverse")
+```
+
+## RStudio cheatsheet 
+
+For a cheatsheet on RStudio, go here:
+
+<https://github.com/rstudio/cheatsheets/raw/main/rstudio-ide.pdf>
+
+# What is R?
+
+## First, there was "S".
+
+- S was designed by John Chambers and others at Bell Labs in the 1970s specifically for data analysis and statistics.
+- R was developed in 1991 by **R**oss Ihaka and **R**obert Gentleman and re-implemented much of S after S became licensed software.
+
+## Then there was "R"
+
+- R was open-sourced in 1995 and John Chambers and other statisticians are part of its core development team.
+- R is object-oriented (i.e., you can build containers of variables and the like), like Java.
+- R is interpreted (i.e., the interpreter turns interprets your text code immediately and runs it), like Python.
+- R has a tonne of packages for statistics and biology.
+- More on the basics of R next time.
+
+# What are Markdown, R Markdown, and Quarto?
+
+## Markdown: a plain text (i.e., just characters) way of "formatting" text
+
+- Markdown is a kind of "markup" language (e.g., HTML).
+- Designed for simplicity and readability
+- No need to "view" Markdown to read it easily
+- Often used in code documentation
+- Increasingly used in full document preparation (journal article, books, etc)
+
+Ok, let's get Markdown!\
+![](assets/dancing.gif)
+
+First, this whole document is Markdown, so you can quickly see examples of the following:
+
+- Headings are created with hash symbols `#`
+
+    - `#` is the "first" heading
+    - `##` is the "second" heading, which is smaller (how much smaller? set by the "stylesheet")
+    - etc
+
+- *Italic text* in encapsulated by one \* or asterisk, **Bold text** by two asterisks. Code can be added in line with backticks, `code`.
+
+- Lists can start with -, \*, or +. (Quarto requires a blank line before the list starts)
+
+    - Sublists are indented at minimum to line up with the content of the enclosing list. Use with 4 spaces (tab twice in RStudio) for syntax highlighting.
+    
+    - Numbered lists can be used too.
+      1. This is the first element.
+      2. This is the second.
+      
+    - Numbered lists can be automatically numbered by using `(@)` as the list marker. In-fact, these lists will be numbered continuously across multiple lists
+      (@) This is the eleventh element since it continues the `(@)` from above.
+      (@) This is the twelfth element.
+
+- New paragraphs are separated by blank lines.
+
+    Line breaks, without a new paragraph, need two spaces\
+    in order to be recognized. These can be used in lists too.
+
+- Links use angle brackets \<\>: <https://www.r-project.org/>
+
+- Links with different text use `[text](http://link.to.something)`
+
+- Images use `![image caption](path.to.image)`. Add `{width=50%}` after the `(path.to.image)` to have the image use 50% of its possible size.
+  
+  E.g., here is an elephant that only takes up 25% of the space.
+  
+  ![elephant](assets/elephant.png){width=25%}
+
+- Tables can be created too:
+
+    | Right | Left | Default | Center |
+    |------:|:-----|---------|:------:|
+    |   12  |  12  |    12   |    12  |
+    |  123  |  123 |   123   |   123  |
+    |    1  |    1 |     1   |     1  |
+
+-   For more details, see the [Quarto docs](https://quarto.org/docs/authoring/markdown-basics.html). Quarto uses a ["flavor" of Markdown](https://pandoc.org/MANUAL.html#pandocs-markdown) created for [Pandoc](https://pandoc.org/), which is the tool Quarto uses to convert Markdown into all the different document types (e.g., PDF, DOCX, HTML, etc).
+
+# R Markdown and Quarto: mixing text (Markdown) and R code (R)
+
+Ok, lets put some R in this thing.
+
+Make a code "**chunk**"" with three back ticks followed by an r in braces. End the chunk with three back ticks:
+
+```{r}
+paste("Hello", "World!")
+```
+
+Place code inline with a single back ticks. The first back tick must be followed by an R, like this: `r paste("Hello", "World!")`.
+
+You can control how the **chunks** of R code work in the rendered document by adding options like `#| echo: false` to hide the code when you create the HTML
+
+```{r}
+#| echo: false
+runif(10)
+```
+
+or you can add the option `eval=FALSE` so that the code isn't evaluated (see the `install.packages` lines in this `.qmd`)
+
+You can do plots too. Let's do one with a caption ("This is a cool_plot", which you can see Quarto output, which is useful for debugging) that is just a bunch (1000) of normally distributed numbers (mean=0, std=1):
+
+```{r}
+#| fig-cap: This is a cool plot
+plot(rnorm(1000, 0, 1))
+```
+
+Now, lets do something a little more interesting. We can pull in data from all kinds of places including websites and actively updated databases. For example, here are COVID-19 hospitalization numbers for the United States for Kentucky and Tennessee from the CDC <https://data.cdc.gov/Public-Health-Surveillance/United-States-COVID-19-Hospitalization-Metrics-by-/39z2-9zu6/about_data>:
+
+```{r}
+#| warning: false
+library(tidyverse)
+library(RSocrata) 
+
+# https://data.cdc.gov/Public-Health-Surveillance/United-States-COVID-19-Hospitalization-Metrics-by-/39z2-9zu6/about_data
+us = read.socrata("https://data.cdc.gov/resource/39z2-9zu6.csv")
+
+us %>% 
+  filter(jurisdiction == "KY" | jurisdiction == "TN") %>% 
+  ggplot(aes(x=collection_date, y=new_covid_19_hospital, color=jurisdiction)) + 
+  geom_line() +
+  labs(x="Date", y="New COVID-19 Hospital Admissions", color="State") +
+  theme_classic()
+```
+
+More about using R with Markdown via Quarto can be found in the here: <https://quarto.org/docs/computations/r.html>.
+
+### Why Quarto?
+
+You may be asking yourself how this plain text gets mixed or "knitted" together with the R code and output and converted in HTML (or another document format). This is where Quarto comes in. Quarto is also a program that reads the `.qmd` first. It looks for R code blocks, runs them, and then takes that output and knits it together into a Markdown document. Quarto gives that Markdown document to Pandoc, which converts it to the output format of choice (e.g., HTML). This knitting process used to be done by an R package called `rmarkdown`, which is actually still used by Quarto. R Markdown however was focused on R whereas Quarto can be used with other languages such as Python and Julia. Hence, learning how to interact with Quarto can be helpful even if you need to switch to compling documents with calculations done using those languages.
+
+## Reproducible Research
+
+![Table 1 from Alston and Rick (2021) Bull Ecol Soc Am 102(2):e01801. <https://doi.org/10.1002/bes2.1801>](assets/tab1_alston_rick_2021.png)
+
+# Lab ![](assets/beaker.png)
+
+Posted Thursday!!
