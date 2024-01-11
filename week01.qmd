@@ -204,7 +204,7 @@ You can do plots too. Let's do one with a caption ("This is a cool_plot", which 
 plot(rnorm(1000, 0, 1))
 ```
 
-Now, lets do something a little more interesting. We can pull in data from all kinds of places including websites and actively updated databases. For example, here are COVID-19 hospitalization numbers for the United States for Kentucky and Tennessee from the CDC <https://data.cdc.gov/Public-Health-Surveillance/United-States-COVID-19-Hospitalization-Metrics-by-/39z2-9zu6/about_data>:
+Now, lets do something a little more interesting. We can pull in data from all kinds of places including websites and actively updated databases. For example, here are COVID-19 hospitalization numbers for the United States for Kentucky and Tennessee from the [CDC](https://data.cdc.gov/Public-Health-Surveillance/United-States-COVID-19-Hospitalization-Metrics-by-/39z2-9zu6/about_data>):
 
 ```{r}
 #| warning: false
