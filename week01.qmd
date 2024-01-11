@@ -234,4 +234,26 @@ You may be asking yourself how this plain text gets mixed or "knitted" together 
 
 # Lab ![](assets/beaker.png)
 
-Posted Thursday!!
+-   Create your own Quarto Markdown document ("File"->"New File"->"Quarto Document")
+
+-   Give the document a title, author, and date (see [here](https://quarto.org/docs/reference/formats/html.html)).
+
+-   Write a paragraph about what kind of data you are thinking of analyzing and visualizing. Include an image with a caption to help with the description.
+
+-   Create a list of your top 5 favorite TV shows. 
+
+-   Take the list and create a table that include the following columns: show name, year it premiered, country it premiered in, your ranking
+
+-   Use some Markdown elements to structure your document. Include the following:
+
+    -   headings
+    -   a link
+    -   some bold or italic text
+
+-   Make sure you can get render proper HTML in RStudio. (Select the "Preview in Viewer Pane" option under the gear icon for seeing the HTML)
+
+-   Upload to Canvas under Week 1
+
+    - Download your files from the server. 
+    - If you didn't download any images (e.g., only linked to images on the web), select your `qmd` file in the "Files" pane, select the gear icon "More", and select "Export". Then upload the `qmd` file to Canvas.
+    - If you did download an image to the server, you'll need to select the image and the `qmd` file in the "Files" pane, select the gear icon "More", and select "Export". This will download a zip file. Upload that zip file to canvas.
