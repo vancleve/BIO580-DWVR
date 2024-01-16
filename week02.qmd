@@ -1,0 +1,296 @@
+---
+title: 'Intro to R: Data types, flow control, and functions'
+author: "Jeremy Van Cleve"
+date: 15 01 2024
+format: 
+  html:
+    self-contained: true
+---
+
+# Outline for today
+
+- Objects and functions
+- Statements and style
+- Types of objects
+- Flow control
+- Loops
+- More on functions
+
+# Objects
+
+Everything in R is an object. For example numbers are objects,
+```{r}
+10
+```
+and strings of characters, AKA "strings", are objects,
+```{r}
+"hello world\n"
+```
+
+One way you can combine objects in R is by using an "operator" like `+`
+```{r}
+10 + 100
+```
+or by using a function
+```{r}
+exp(10)
+```
+
+# Objects are functions and functions are objects
+
+Even functions, like `print`, which prints a string, is an object,
+```{r}
+print("hello world")
+```
+
+## What is an object then? 
+
+> An object is data stored in memory with a name (or identifier) that can have attributes and functions (often called methods) that do specific things to objects with specific attributes.
+
+This means that even something as simple as the number `10` can have attributes that we can query and functions that are specific for use on it. To see an example, consider, the `names` attribute that comes up a lot and can provide a convenient way to access an element of a vector. Say we create a vector where we give each element a label:
+```{r}
+c(a=1, b=2)
+```
+We can get the labels by asking for the `attributes` of the vector or running
+```{r}
+attributes(c(a=1, b=2))
+names(c(a=1, b=2))
+```
+
+## What is a function then?
+
+> A function (or subroutine or method or procedure) is a set of instructions packaged as a unit. It may or may not take input and may or may not produce output.
+
+For example, this function takes a number as input, calculates it square, gives us the answer as output:
+```{r}
+sqrd = function(n) {
+  n^2
+}
+
+sqrd(2)
+```
+
+# Statements and style
+
+## Assignment statements
+
+To create and save an object, you perform an "assignment statement" where the name of the object is on the left, the value of the object is on the right, and in the middle is the assignment operator, `=`,
+```{r}
+an_object = "a string object"
+```
+or `<-`
+```{r}
+an_object <- "a string object"
+```
+Either `<-` or `=` works as the assignment operator though most R aficionados will use `<-`. However, I prefer (strongly) the `=` operator since that's what **many other languages** use. The ones that don't use `=` often use `:=`. It also takes fewer keystrokes (1 vs 3) to type `=` compared to `<-`. I think `<-` looks funny too. I could keep going...
+
+## Style of statements
+
+- Every command in R must end in a "newline" (what you get when you hit "return") or semicolon. Newlines are the norm in most R code and I will use them too.
+
+- If an R statement is incomplete and you enter a newline, R will let you continue the statement: 
+  ```{r}
+  new_statement = print("this continues on the
+  next line")
+  ```
+
+- Use plenty of space in your statements to help readability.
+    - This is more readable
+      ```{r}
+      a = (100 + 3) - 2
+      mean(c(a / 100, 642564624.34))
+      ```
+    - than this
+      ```{r}
+      a=(100+3)-2
+      mean(c(a/100,642564624.34))
+      ```
+
+- Use "tabs" to set off blocks of code like loops and function definition. Good coding style will make these blocks look obvious since they are indented and spaced nicely. This makes understanding which parts of the code are run when much easier.
+
+- The "tidyverse" (R packages for data science) has a style guide, <https://style.tidyverse.org/>, that produces consistent and easy to read code.
+
+## Naming conventions
+
+Now that you can create objects using statements, you have to know how to name them. R has some simple rules for this:
+
+> A syntactically valid name consists of letters, numbers and the dot or underline characters and starts with a letter or the dot not followed by a number. Names such as ".2way" are not valid, and neither are the reserved words.
+
+This information comes from the help for the `make.names` command, which you can get type typing `?makes.names` where "?" before a function gives you the **help page**:
+```{r}
+?make.names
+```
+Then, you convert any string into a valid R variable name using the `make.names` command:
+```{r}
+not_valid_name = "1 way to not be a valid name"
+valid_name = make.names(not_valid_name)
+print(valid_name)
+```
+
+Even when your variable names are valid, knowing the rules for naming is important for the `names` attribute of objects like vectors and `data.frames`. When you read your data from a file into R, the column names must be "valid" or enclosed within backticks (\`\`). Some of the nicer functions will use the backticks (e.g., `read_csv` from `tidyverse`) so that the name is preserved while others will convert the names into valid ones (e.g., `read.csv` in the `utils` package).
+
+A couple tips for naming objects:
+
+- Err on the side of using longer object names that describe what that object stores: e.g., `populationSize` is often better than `N`. Note that R itself doesn't always obey this rule; e.g., the function `c` combines values. **Never** name a function a single letter.
+
+- Maintain a convention for using multiple words in object names. E.g., underscores or periods for spaces or capitalize every word. The `tidyverse` [style guide](https://style.tidyverse.org/syntax.html#object-names) suggests:
+
+  > Variable and function names should use only lowercase letters, numbers, and \_. Use underscores (\_) (so called snake case) to separate words within a name.
+
+- Remember that R is case sensitive, so `populationSize` is a different object from `populationsize`.
+
+- **Never** use object names that differ only by upper or lower case; this will almost certainly lead to user created bugs.
+
+# Types of objects
+
+## Scalars
+
+Scalars are the simplest object in R. They hold a single value like a number (called "numeric" by R) or a string (called "character" by R)
+```{r}
+number = 3.1459
+string = "hello again world"
+```
+How do you know these objects are the types you think they are? You can check with the function `class`, which gives you the value of the object's `class` attribute:
+```{r}
+class(number)
+class(string)
+```
+You can ask for a little more by getting the "structure" of the object using the function `str` (by the way, this function is another example of a name that is too short; ***strike two R!***).
+```{r}
+str(number)
+str(string)
+```
+These commands may not be super useful now, but R has enough different types of object that you'll want to be able to ask an object about itself at some point.
+
+## Vectors
+
+Vectors are everywhere in R. They are simply lists of objects of a **common type**, like numeric or character. Actually, our scalars were just vectors with a single element. To create a vector, use the ***very poorly*** named `c` or combine function.
+```{r}
+number_vector = c(1,10,100,1000)
+number_vector
+string_vector = c("hello", "world", "for", "yet", "another", "time")
+string_vector
+```
+To find out the length of the vectors you just created, use the function `length`
+```{r}
+length(number_vector)
+length(string_vector)
+```
+
+Accessing elements of a vector is accomplishing using "indexing". Vectors are index from 1 to the number of elements in the vector. To access an element, use brackets after the object name; printing the second element of `string_vector` looks like this:
+```{r}
+print(string_vector[2])
+```
+
+## Lists
+
+Suppose that you want a vector that mixes numbers and strings. You could try
+```{r}
+mixed = c(1,2,3,"one","two","three")
+```
+but looking at the result
+```{r}
+mixed
+```
+you will find that R converted the numbers to strings. That's because **vectors only contain a single object type**. This is important for a number of reasons though the one most relevant to using data in R is that data frames, which R uses to store tabular data, use vectors for columns, which means that each column must contain data of the **same** type. This means that you have to be careful reading in your data if for some reason some columns contains both `1` and `"one"` and both are supposed to mean the number one. Some care will have to be taken in such cases.
+
+Lists however can contain multiple types. Thus, using the `list` function works:
+```{r}
+mixed = list(1,2,3,"one","two","three")
+str(mixed)
+```
+You can index them just like a vector too, though they require double brackets (more on this later):
+```{r}
+mixed[[1]]
+mixed[[4]]
+```
+
+The fact that lists can contain any mix of objects is super useful and comes up in data frames as well. Suppose you want to have one column of your tabular data that has student names, each of which is a string, and one column which is a numerical score for an assignment. The list will allow you to store both a vector of strings and a vector of numbers. Data frames in R are actually just special lists where each element is a vector that stores the same number of elements, which is the number of rows of the table.
+
+# Flow control and logical tests
+
+Flow control is a technical term for telling a program which statements or blocks of code to execute. In R, you use "if-else" statements to accomplish this. For example, you can print a statement only if a variable takes a certain value:
+```{r}
+test = -10
+if (test > 0) {
+  print("test is greater than zero")
+} else {
+  print ("test is not greater than zero")
+}
+```
+The curly brackets enclose the block of statements that get executed if the condition is true or not. Note that the else is on the same line as the final curly bracket of the "if". The ">" (greater than) symbol is an example of a *relational operator*; others include equals, "==", not equals, "!=", and "greater than or equal", ">=" (likewise, less than operators exist too).
+
+The outcome of a comparison with a relational operator is a "TRUE" or "FALSE" value, which are "Booleans". You can combine TRUE and FALSE values with *Boolean operators* like "&&" ("and"), "||" ("or"), and "!" ("not"). For example, you can check our whether our test variable is greater than zero or less than -1:
+```{r}
+test = -10
+if (test > 0 || test < -1) {
+  print("test is greater than zero or less than -1")
+} else {
+  print ("test is between zero and -1")
+}
+```
+
+# Loops
+
+Loops are ways to tell R to perform a block of commands repeatedly. The most useful kind of loop is the "for" loop. First, you create an empty vector. Then, you use the for loop to fill its elements.
+```{r}
+vec = c()
+for (i in 1:100) {
+  vec[i] = i*i
+}
+str(vec) 
+```
+The structure of the for loop is `for (index.object in index.values) { code block }`. The first run of the loop sets `index.object` to the first element of `index.value` and executes the code block. The next run sets the `index.object` to the second value of `index.value`, executes the code block, and so on until the loop has run as many times as there are elements in `index.value`.
+
+Note that the above loops shows you something else about vectors. You can build them dynamically by just assigning values to their elements. This is a very convenient thing that R lets you do, but many other languages will not (and sometimes for good reasons). 
+
+# More on functions
+
+Functions are important so we will discuss them in more detail. Functions take "arguments" between the parentheses and these arguments are the data you want the function to use. For example, the `runif` function generates uniformly distributed random numbers. There are three arguments to the function:
+```{r}
+str(runif)
+```
+The first argument is how many numbers we want, the second is the minimum value for them, and the third is the maximum value. Thus, to create 10 random numbers between -1 and 1, you do this:
+```{r}
+print(runif(10, -1, 1))
+```
+
+In RStudio, a handy way to see what functions are available or to jog your memory about a function's name is to begin typing the name and then hit "tab" when you have a few characters. RStudio will show you a list of possible functions and if you hit "tab" again it will complete your typing with the highlighted name. If you're typing inside the parenthesis, hitting "tab" will help remind you what the arguments to the function are.
+
+In R, the arguments to functions often have "names". If they do, you can give the argument with it's name:
+```{r}
+print(runif(min = -1, max = 1, n = 10))
+```
+Notice that giving the name of the argument allows us to give the arguments in any order. If an arguments doesn't have a name, then you must give the arguments in exactly the order they are listed in the definition of the function (see the help for a function with "?name_of_function" to get info on the arguments the function takes).
+
+One of the most powerful parts of programming in any language is writing your own functions. To do this, you start with a name for the function and assign the object to `function(arg1, arg2, ...) { function body }`. This is called a function *definition*. For example, the function
+```{r}
+runit = function(n = 1) {
+  return(runif(n, max = 1, min = 0))
+}
+```
+generates a random number in the unit interval (0,1) where the number of values you want is the only argument. We can exclude that argument since it has a "default" value of 1 or give the argument explicitly, with or without a name:
+```{r}
+print(runit())
+print(runit(n = 2))
+print(runit(5))
+```
+Finally, the function returns whatever is in the "return" function or the last value in the function body. Thus, we can easily capture our random numbers or the output from any function:
+```{r}
+rvals = runit(5)
+print(rvals)
+```
+
+One situation that comes up often in data wrangling, processing, and analysis is that you'll want to perform a small set of calculations on some data, like a column in a data frame, and writing a separate function definition seems like a lot of typing for that. R provides **anonymous** functions for just these situations. An anonymous function is one you can write quickly in a single line and doesn't require a name for the function. You start with `\(arg_x, arg_y)` (for two arguments named `arg_x` and `arg_y`) and then write your line of code. For example, this anonymous function
+```{r}
+\(x) x^2
+```
+squares its argument
+```{r}
+(\(x) x^2)(2)
+```
+
+
+# Lab ![](assets/beaker.png)
+
+Posted Thursday.
