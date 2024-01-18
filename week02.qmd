@@ -293,4 +293,47 @@ squares its argument
 
 # Lab ![](assets/beaker.png)
 
-Posted Thursday.
+1.  Write a function that takes a single vector argument and that prints out the indices (i.e., location in vector or matrix) that are greater than zero. For example, if you create a vector or normally distributed random variables, 
+    ```{r}
+    #| eval: false
+    rvec = rnorm(100)
+    ```
+    then your function should output the numbers between 1 and 100 where the vector is positive. For example,
+    ```{r}
+    #| eval: false
+    your_fuction(rvec)
+    ```
+    would then output something like `[1] 3 56 19 40 58 99`.
+    
+    Tips. Use a `for` loop.
+
+
+2.  We'll plot some COVID-19 data for this question. Use the code below to read in COVID-19 case and death data into the variable `world`.
+    ```{r}
+    #| warning: false
+    library(tidyverse)
+    
+    world = read_csv("https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/cases_deaths/full_data.csv")
+    ```
+    **Write a function that plots `new_cases` or `new_death` from the `world` data between two dates for a specific country**
+    You function should take the following five arguments:
+    (i) the data you want to plot
+    (ii) "new_cases" or "new_deaths" (so you can select which you want to plot)
+    (iii) the country you want to plot (e.g, Ukraine)
+    (iv) a beginning date
+    (v) an ending date
+ 
+    This function should plot the data **only** between the beginning and ending date. Thanks to the `lubridate` and `dplyr` packages in `tidyverse`, this isn't too hard. You can use the following code to get a "slice" of the date between two dates (e.g., "2022-01-01" and "2022-08-25") and for a specific country (e.g., "Ukraine"):
+    ```{r}
+    my_slice = filter(world, date > "2022-01-01", date < "2022-08-25", location == "Ukraine")
+    ```
+    Plotting this slice shows that it works.
+    ```{r}
+    plot(my_slice[["date"]], my_slice[["new_cases"]], type='l')
+    ```
+    Thus, you should be able to call your function, say `my_plot_function` like this,
+    ```{r}
+    #| eval: false
+    my_plot_function(world, "new_cases", "2022-01-01", "2022-08-25", "Ukraine")
+    ```
+    and get the plot above.
