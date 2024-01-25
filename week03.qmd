@@ -215,4 +215,58 @@ sum(apply(rmatx, 1, \(x) sum(x < 8)))
 
 # Lab ![](assets/beaker.png)
 
-Thursday...
+### Data
+
+Now let's slice some real **DATA**. We'll return to COVID-19 data from the CDC. These data are split up between [hospitalizations](https://data.cdc.gov/Public-Health-Surveillance/Weekly-United-States-COVID-19-Hospitalization-Metr/7dk4-g6vg/about_data)) and [deaths](https://data.cdc.gov/NCHS/Provisional-COVID-19-Death-Counts-by-Week-Ending-D/r8kw-7aab/about_data). The data are saved locally, and we load them in below and combine them (see the code for an example of some of the data wrangling necessary to do this).
+```{r}
+#| message: false
+library(tidyverse)
+
+# Read in hospitalization and deaths
+us_hosps  = read_csv("US_COVID19_Hosps_ByWeek_ByState_20240125.csv")
+us_deaths = read_csv("US_COVID19_Deaths_ByWeek_ByState_20240125.csv")
+
+us_hosps_deaths = 
+  us_deaths |> 
+  mutate(`Week Ending Date` = mdy(`Week Ending Date`)) |> # death table dates need conversion
+  rename(week_ending_date = `Week Ending Date`, state = State) |> # rename columns so they match across the two tables
+  select(-c(`Data as of`, `Start Date`, `End Date`, Group, Year, Month, `MMWR Week`, Footnote)) |> # get rid of excess columns in deaths table
+  inner_join( # join the two tables together
+    us_hosps |>
+      rename(state_abbrv = state) |> # hosps has states as abbreviations so we'll need to add full state names
+      left_join(tibble(state_abbrv = state.abb, state = state.name) |> 
+                  add_row(state_abbrv = c("USA", "DC", "PR"), state = c("United States", "District of Columbia", "Puerto Rico")))) |>
+  filter(state != "United States")
+```
+You can get the first few rows with
+```{r}
+head(us_hosps_deaths)
+```
+
+The data are saved as a `tibble`, which is really a fancy `data.frame`, which is a special kind of list that we will discuss in more detail next week. For the moment, you can practice slicing the data.frame as if it were a matrix. 
+
+### Problems
+
+Use the code above in your problem set to load the `.csv` files and combine the two tables into the single `us_hosps_deaths` table. For each of the problems, show the R code in your `.qmd` file. You should be able to use a few lines of R code to obtain the answer directly (i.e., you shouldn't just scroll though the data table and give the answer by hand). Use the vector indexing operations above to do your slicing (even if you know another way using `dplyr` or other R packages). 
+
+This is a big table so use the `str(us_hosps_deaths)` function to get information on all the columns and `view(us_hosps_deaths)` will bring up GUI viewer of the table. Also, make use of the links above in the "Data" section to the CDC website to see more info on what data each column contains.
+
+1.  Which **state** had the most **deaths** during one week in 2021? Which week was that?\
+    (hint: remember you can compare dates: e.g., "2021-01-02" > "2021-01-01" is `TRUE`, etc.)\
+    (hint: you'll need the boolean `&` to combine multiple conditions)\
+    (hint: your solution might use the `which.max` function)
+
+2.  How many cases has Kentucky had during 2021?\
+    (hint: use the `sum` function)
+
+3.  How many cases were there outside of California in the month of August 2021?
+
+4.  Which US state has the second fewest number of COVID-19 hospitalizations in 2021? Use the column `total_adm_all_covid_confirmed_past_7days`\
+    (hint: get a vector of all the (unique) states)\
+    (hint: use `sapply` on that vector with an anonymous function that sums the hospitalization column for the right state and dates)\
+    (hint: use `sort` to help you find the second fewest hospitalizations)
+
+5. Which week in 2021 had the highest number of hospitalization in the country (across all states and territories)? Use the column `total_adm_all_covid_confirmed_past_7days`\
+   (hint: use `sapply` and `sum` to get the totals for each date in a way similar to question 4. Then use the `order` function to give you the right order to sort the dates...)
+   
+   
