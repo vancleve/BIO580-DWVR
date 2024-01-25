@@ -217,7 +217,7 @@ sum(apply(rmatx, 1, \(x) sum(x < 8)))
 
 ### Data
 
-Now let's slice some real **DATA**. We'll return to COVID-19 data from the CDC. These data are split up between [hospitalizations](https://data.cdc.gov/Public-Health-Surveillance/Weekly-United-States-COVID-19-Hospitalization-Metr/7dk4-g6vg/about_data)) and [deaths](https://data.cdc.gov/NCHS/Provisional-COVID-19-Death-Counts-by-Week-Ending-D/r8kw-7aab/about_data). The data are saved locally, and we load them in below and combine them (see the code for an example of some of the data wrangling necessary to do this).
+Now let's slice some real **DATA**. We'll return to COVID-19 data from the CDC. These data are split up between [hospitalizations](https://data.cdc.gov/Public-Health-Surveillance/Weekly-United-States-COVID-19-Hospitalization-Metr/7dk4-g6vg/about_data) and [deaths](https://data.cdc.gov/NCHS/Provisional-COVID-19-Death-Counts-by-Week-Ending-D/r8kw-7aab/about_data). The data are saved locally, and we load them in below and combine them (see the code for an example of some of the data wrangling necessary to do this).
 ```{r}
 #| message: false
 library(tidyverse)
