@@ -259,7 +259,7 @@ This is a big table so use the `str(us_hosps_deaths)` function to get informatio
 2.  How many COVID-19 deaths has Kentucky had during 2021?\
     (hint: use the `sum` function)
 
-3.  How many cases were there outside of California in the month of August 2021?
+3.  How many COVID-19 deaths were there outside of California in the month of August 2021?
 
 4.  Which US state has the second fewest number of COVID-19 hospitalizations in 2021? Use the column `total_adm_all_covid_confirmed_past_7days`\
     (hint: get a vector of all the (unique) states)\
