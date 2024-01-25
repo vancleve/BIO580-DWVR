@@ -256,7 +256,7 @@ This is a big table so use the `str(us_hosps_deaths)` function to get informatio
     (hint: you'll need the boolean `&` to combine multiple conditions)\
     (hint: your solution might use the `which.max` function)
 
-2.  How many cases has Kentucky had during 2021?\
+2.  How many COVID-19 deaths has Kentucky had during 2021?\
     (hint: use the `sum` function)
 
 3.  How many cases were there outside of California in the month of August 2021?
