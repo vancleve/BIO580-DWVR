@@ -1,0 +1,270 @@
+---
+title: 'Getting data into R with data.frames'
+author: "Jeremy Van Cleve"
+date: 30 01 2024
+format: 
+  html:
+    self-contained: true
+---
+
+# Outline for today
+
+-   Another slice of slicing
+-   Names and attributes
+-   Factors
+-   Data frames: a special kind of list
+-   Reading data tables
+
+# Another slice of slicing
+
+Last time, we covered much of the basics of slicing matrices but there are still some topics and some helper functions that will be useful to know when trying to accomplish certain tasks.
+
+## Assigning to a slice
+
+Not only can you extract a slice of a matrix to analyze or plot but you can also assign values to that slice. First, create a matrix of all zeros to manipulate:
+```{r}
+allz = matrix(0, nrow = 6, ncol = 6)
+allz
+```
+As before, you slice the first row.
+```{r}
+allz[1,]
+```
+However, you can also assign values to it.
+```{r}
+allz[1,] = 1:6
+allz
+```
+
+Note that when assigning to a slice, the right-hand side must be of the same dimensionality as the left-hand side. For example, the following will not work:
+```{r}
+#| eval: false
+allz[1,] = 1:4
+```
+The one exception to this rule is when the number of items on the right hand side is a multiple of the number of elements in the slice. The simplest example is
+```{r}
+allz[1,] = 1
+allz
+```
+but you can also do
+```{r}
+allz[1,] = 1:3
+allz
+```
+where the right hand side is use as many times as necessary to fill the slice.
+
+## Sorting
+
+Sorting numeric and character values is an important task that comes up in many applications. The `sort` function has reasonable defaults where it produces increasing numeric values
+```{r}
+set.seed(100)
+rvec = sample(1:100, 20, replace = TRUE)
+rvec
+sort(rvec)
+```
+or character values
+```{r}
+svec = c("hello", "world", "goodbye", "grand", "planet")
+sort(svec, decreasing=TRUE)
+```
+You can reverse the sort order by setting the argument `decreasing = TRUE`.
+
+## Getting the indices from slices
+
+### Sorting
+
+Often, you will want to sort not only a vector by the rows of a data matrix based on some column of the matrix. Thus, you need the list of positions each row will go to (e.g., row 1 to row 10 because its 10th in the sorted order, etc). To obtain this, you can use the `order` function
+```{r}
+svec
+order(svec)
+```
+which output precisely that list of indices. If you stick these indices back into the vector, you will obtain the original `sort` operation
+```{r}
+svec[ order(svec) ]
+sort(svec)
+```
+
+You can also use the "sort order" of one column to order the rows of a whole matrix or data table. For example, using a matrix of random values,
+```{r}
+set.seed(42)
+rmatx = matrix(sample(1:20, 36, replace = TRUE), nrow = 6, ncol = 6)
+rmatx
+```
+you could then sort the rows based on elements in the first column by first obtaining the indices used to sort that column
+```{r}
+order(rmatx[,1])
+```
+and using the indices to order the rows
+```{r}
+rmatx
+rmatx[ order(rmatx[,1]), ]
+```
+
+### Boolean (logical) slicing
+
+Recall that you can slice by creating a logical condition (generating `TRUE` and `FALSE` values) and use that in the index of a matrix. Sometimes, you want the actual indices of the elements of that matrix that are sliced; i.e., you want the indices of the elements where the conditions is `TRUE`. To get these indices, you use the `which` function. For example, the logical vector and slice are
+```{r}
+rmatx[,1] > 10
+rmatx[ rmatx[,1] > 10, ]
+```
+You can slice the same way with `which`:
+```{r}
+which( rmatx[,1] > 10 )
+rmatx[ which( rmatx[,1] > 10 ), ]
+```
+Finally, there some special versions of the `which` function that give you the first index of the max or min element of a vector, `which.max` and `which.min`.
+
+# Names and attributes
+
+We've talked about attributes and names before but there are some helpful functions for getting and setting the names associated with arrays and lists. You have already seen with lists how each element can be given a name.
+```{r}
+l = list(a = 1, b = "one hundred")
+named_svec = c(s1 = "hello", s2 = "world", s3 = "goodbye", s4 = "grand", s5 = "planet")
+named_svec
+str(named_svec)
+```
+
+You can recover those names with the `names` function:
+```{r}
+names(named_svec)
+```
+
+You can also set the names afterwards by assigning to `names`:
+```{r}
+svec
+names(svec) = c("s1", "s2", "s3", "s4", "s5")
+svec
+```
+
+Finally, you can return a version of the vector with the names stripped using the function `uname`
+```{r}
+unnamed_svec = unname(named_svec)
+unnamed_svec
+```
+though note that this hasn't changed the original vector:
+```{r}
+named_svec
+```
+
+Finally, you can get rid of the names entirely by assigning `names` to `NULL`
+```{r}
+names(named_svec) = NULL
+named_svec
+```
+
+Just as reminder, while we can name elements of vectors, they still have to hold the same data type, unlike lists that can hold anything.
+```{r}
+str(list(a=1, b="two"))
+str(c(a=1, b="two"))
+```
+
+# Factors
+
+A special object that you will see when dealing with data frames is called a "factor". A factor is a vector that can contain only predefined values and essentially stores categorical data (e.g., "tall", "medium", and "short" for plant height). Factors have a "levels" attribute that lists the allowable values. For example
+```{r}
+fac_factor = factor(c("Famulski", "Burger", "Seifert", "Santollo", "Duncan", "Singh"))
+fac_factor
+```
+You can get the levels of a factor with
+```{r}
+levels(fac_factor)
+```
+
+If you try to set an element of the factor object to a value outside of `levels`, you will receive a warning
+```{r}
+fac_factor[1] = "Van Cleve"
+fac_factor
+```
+and the element will be converted to the `NA` value, which is used for missing data.
+
+Many R functions that read data tables take advantage of this behavior of factors so that columns may only contain certain values and the other values are missing data. This occurs when the function runs into a column with string data and the R function will often convert that column to a factor. Some of the functions that read data tables have nice arguments that let you tell them that specific strings, say "-", represent missing data and should be be converted to `NA`.
+
+While useful, factors are extremely annoying when your data are converted to them when you don't expect it as further changes to the data table may result in `NA` values when you really wanted to add a new string value. This [paper](https://peerj.com/preprints/3163/) gives a good history of why factors are useful in R. It mostly comes down to factors being useful for categorical variables in regression models.
+
+The main place factors are used that we'll encounter in this course is when plotting categorical variables. In those cases, the order the variables are plotted in will be determined the order of the levels in `levels`. In those cases, you may want to reorder the factors so that the variables are plotted in a specific order (say in descending order of frequency in the data). For this, there is a nice package called `forcats` that is included in the `tidyverse` that has the function `fct_reorder` that can help. Another thing we'll run into is changing factor levels so that they have more descriptive labels. For this `forcats` has `fct_recode`. We'll see examples of these kinds of scenarios later on when we're plotting using `ggplot2`
+
+# Data frames
+
+Finally we have reached data frames. Data frames are the **most common way of storing data in R**. Essentially, a data frame is a list object containing vectors of equal length (i.e., the number of rows of the table). Put another way, a data frame is a `list` version of a matrix. Thus, data frames have properties such as `length()`, `rnow()`, `ncol()` `colnames()`, and `rownames()`.
+
+Creating a data frame is like creating a list where you name your elements, which here are columns (data not guaranteed to be accurate...):
+```{r}
+dframe = data.frame(height_rank = 1:4, last_name = c("Van Cleve", "Linnen", "Seifert", "Pendergast"), first_name = c("Jeremy", "Catherine", "Ashley", "Julie"))
+dframe
+```
+
+Slicing a data frame works like slicing a matrix or a list. Often, we will use the list convention where columns can be obtained with `$`. For example,
+```{r}
+dframe$first_name
+dframe$last_name
+```
+
+Adding columns to a data frame is done with `cbind` ("column bind"), which glues together columns,
+```{r}
+cbind(dframe, building = c("THM", "THM", "THM", "THM"), floor = c(2,2,2,3))
+```
+and adding rows with `rbind` ("row bind"), which glues together rows,
+```{r}
+rbind(dframe, data.frame(height_rank = 0, last_name = "Smith", first_name = "Jeramiah"))
+```
+
+Again, note that each of these commands returned a **new** `data.frame` and the original is unchanged until we explicitly save back to that variable name:
+```{r}
+dframe
+```
+
+Functions like `cbind`, `rbind`, and others that do operations on arrays and data frames usually create a copy of the data and return the modified copy. This is ***usually*** what you want since you're not modifying your original variable/data until you explicitly assign the old variable to the new data. One case where you might not want to do this is when your data are so big (e.g., whole genomes, billions of tweets) that they take up a large fraction of the computer's RAM, in which case you have to be very careful about creating copies of your data.
+
+# Reading data tables
+
+Now that you know about data frames, you can start using some nice R functions to read in data. We have already seen this when loading data for the homeworks. As in those examples, we load the a few packages before loading the data since they are nice for reading csv and excel files. For reading excel files, you'll need to install the `readxl` package if you don't have it, which you can do with:
+```{r}
+#| eval: false
+install.packages("readxl")
+```
+
+Then load:
+```{r}
+#| message: false
+library(tidyverse) # loads the `readr` package that loads things like csv files
+library(readxl) # package for reading Excel files
+```
+
+Now, you can use the `read_csv` function to get the COVID-19 data from the CDC.
+```{r}
+us_deaths = read_csv("US_COVID19_Deaths_ByWeek_ByState_20240125.csv")
+```
+Notice that `read_csv` gives you some nice output telling us about the table you just read. This function and others like it (i.e., from the `readr` and `readxl` packages) do a lot for you automatically and have many nice features. For example, `read_csv` has the argument `col_names = TRUE` by default, which means it uses the first row of the table as the column names. Some tables may simple just straight into data without column names in which case you can set `col_names = FALSE` and it will give automatic names or give `col_names` a vector of column names manually. Sometimes data tables will have the first few lines with text describing the data and you can skip them by giving the argument `skip` the number of lines to skip. There are many other options so looking at the help with `?read_csv` is recommended when you're having trouble getting the data loaded correctly.
+
+Loading excel files in no harder. We'll load some data from a RNA-seq paper on genomic imprinting (Babak et al. 2015. Nat Gen, <http://dx.doi.org/10.1038/ng.3274>), [`babak-etal-2015_imprinted-mouse.xlsx`](https://github.com/vancleve/BIO621-DWVR/raw/main/babak-etal-2015_imprinted-mouse.xlsx) (located on course GitHub repo), with `read_excel`
+```{r}
+imprint = read_excel("babak-etal-2015_imprinted-mouse.xlsx", na = "NaN")
+```
+Note that you have to tell the function what strings in the Excel spreadsheet correspond to `NA` or missing data ("NaN" in this case). The first column are the gene names for each row
+```{r}
+imprint$Genes
+```
+and the column names are the tissue type that RNA expression was measured in
+```{r}
+colnames(imprint)
+```
+where the first element is the column name of the "Genes" column. You will manipulate these data later when we talk about tidy data and `dplyr`.
+
+Finally, if you look at both the COVID-19 data and the imprinting data
+```{r}
+us_deaths
+imprint
+```
+you should notice that both are of the `tibble` type. A `tibble` is a `data.frame` but with enhancements. First and maybe most importantly, it prints nicely when you evaluate it at the command line and in Quarto notebooks. Second, it leaves the column names alone on conversion to a data frame. Thus, we get columns like `Preoptic Area (ref)` in the imprinting data instead of 
+```{r}
+make.names("Preoptic Area (ref)")
+```
+So a "normal" `data.frame` would do this to the data:
+```{r}
+data.frame(imprint)
+```
+Note also that in the `html`, the full data frame is printed, which means tons of scrolling, whereas only a preview of the `tibble` is printed, which is usually more convenient. The `tibble` type also doesn't automatically convert character columns to factors. In old versions of R (pre 4.0.0), `data.frame` automatically did this to the consternation of many.
+
+# Lab ![](assets/beaker.png)
+
+Thursday...
