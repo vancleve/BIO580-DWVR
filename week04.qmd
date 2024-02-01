@@ -282,10 +282,6 @@ Before starting on the problems, take a look at which columns are provided in th
 
 ### Problems
 
-```{r}
-owid |> filter(location == "United States", date >= "2021-01-01")
-```
-
 1.  Plot the new cases per week per million people for the pandemic for the United States. Use a line plot. Hint: use the help for plot, `?base::plot`, to set the plot type.
 
 2.  What week had the highest number of new deaths in the United States? Hint: use the `order` (remember to sort descending) or `which.max` functions.
