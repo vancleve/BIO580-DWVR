@@ -267,4 +267,39 @@ Note also that in the `html`, the full data frame is printed, which means tons o
 
 # Lab ![](assets/beaker.png)
 
-Thursday...
+Now that you have all the essential elements of slicing, let's do some more things with COVID-19 data, but this time with world wide data from "[Our World in Data](https://ourworldindata.org/coronavirus)": <https://github.com/owid/covid-19-data/tree/master/public/data>. This is a big data set, so it might take a few moments to download.
+
+**Note**. The cases and deaths are only reported every week in these data so `new_cases`, `new_deaths`, etc are the total for the week (I assume the date is the end of the week though the website wasn't clear 🤷).
+
+```{r}
+#| message: false
+library(tidyverse)
+
+owid = read_csv("https://covid.ourworldindata.org/data/owid-covid-data.csv")
+```
+
+Before starting on the problems, take a look at which columns are provided in the table. This will help for solving the problems.
+
+### Problems
+
+```{r}
+owid |> filter(location == "United States", date >= "2021-01-01")
+```
+
+1.  Plot the new cases per week per million people for the pandemic for the United States. Use a line plot. Hint: use the help for plot, `?base::plot`, to set the plot type.
+
+2.  What week had the highest number of new deaths in the United States? Hint: use the `order` (remember to sort descending) or `which.max` functions.
+
+3.  What week and in what country was the worst (i.e., highest) for per capita death due to COVID-19?
+
+4.  What week and in what country was the worst (i.e., highest) for positivity rate COVID-19?
+
+5.  Create a new data frame using the data from `owid` called `new_cases_per_100k` consisting of the following columns, `location`, `date`, and `cases`, where `cases` is the number of new cases per 100,000 people. In two separate plots, plot the number of new cases per 100k people over time for the United Kingdom (plot 1) and Canada (plot 2). If you wanted to present these plots side by side so as to compare the severity of the pandemic in the UK vs Canada, what might you have to do to make them more comparable?
+
+6.  In the `owid` data set, how many countries have data on ICU patients (column `icu_patients`)? Hint: you might need the `is.na` function and the `unique` function.
+
+7.  In 2021, on how many weeks did the United States have fewer than 5 deaths per million people due to COVID-19? What is answer the United Kingdom? You may run into issues where you're comparing an `NA` value to a number. In this case, you can exclude the `NA` values by using `!is.na(owid$new_cases_per_million)` as the first in your series of logical conditions for your slice or remove `NA` values with the `na.omit()` function or you can tell `sum` to exclude `NA` values with the argument `na.rm = TRUE`.
+
+-   Challenge problem (+3 extra credit)
+    
+    Plot a heatmap of the imprinting data using the `heatmap` function. The rows and columns of the heatmap should be labeled properly with the gene names (rows) and tissue names (columns). The Babak et al. (2015) paper has a similar heatmap in Fig 1. Hint: read carefully the help for the `heatmap` function and know that you can convert data frames to matrices with `as.matrix`.
