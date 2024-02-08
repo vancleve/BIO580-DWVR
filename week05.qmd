@@ -296,7 +296,7 @@ For these problems, use the functions introduced above from the `tidyverse` pack
 
 ### Problems
 
-1.  Using the GWAS data, produce a data table that shows the **mean**, **maximum**, **minimum**, and **variance** of `PVALUE_MLOG` for each combination of disease and journal. Sort the table by `PVALUE_MLOG`.
+1.  Using the GWAS data, produce a data table that shows the **mean**, **maximum**, **minimum**, and **variance** of `PVALUE_MLOG` for each combination of disease and journal. Sort the table by the mean value of `PVALUE_MLOG`.
 
 2.  Recall the gene expression last that was briefly introduced last week:
 
