@@ -292,5 +292,38 @@ Effectively, the pipe takes what is on the left side of it and uses it as the fi
 
 # Lab ![](assets/beaker.png)
 
+For these problems, use the functions introduced above from the `tidyverse` packages like `dplyr` as much as possible.
 
-Thursday...
+### Problems
+
+1.  Using the GWAS data, produce a data table that shows the **mean**, **maximum**, **minimum**, and **variance** of `PVALUE_MLOG` for each combination of disease and journal. Sort the table by `PVALUE_MLOG`.
+
+2.  Recall the gene expression last that was briefly introduced last week:
+
+    ```{r}
+    library(readxl)
+    imprint = read_excel("babak-etal-2015_imprinted-mouse.xlsx", na = "NaN")
+    ```
+    
+    Each row is a gene, each column is a tissue type, and each cell contains a gene expression measurement.
+
+    **Make these data tidy (in one way) by collapsing the tissue columns and making the data table longer**
+    
+    You will need the `pivot_longer` function. The first trick here will be first to identify the "observations" and then the "names_to", which is the variable that changes across each observation. 
+    
+    The second trick is specifying the columns across which you need to gather together into a single column. A hint for the second trick is that you can specify the columns you don't want with the `-` operator or `!` (NOT) operator.
+    
+    The answer will be deceivingly simple! This is the elegance / frustration of R. 
+    
+3.  Using the tidy data from Problem 2, find the **number of genes** (across all tissue types) that have an **expression value <= 10 and  > 2**. These genes are "paternally imprinted" in the Babak et al. dataset, which means they are only expressed from the maternal copy of the gene. 
+
+    Hint: you will need to count each gene once even if it appears in multiple rows, which can be done with the `distinct` function.
+
+4.  Use `pivot_wider` to return the genomic imprinting tidy data from Problem 2 to their original wide format.
+
+5.  We'll use some old data the New York Times COVID-19 dataset:
+    ```{r}
+    #| message: false
+    us = read_csv("https://github.com/nytimes/covid-19-data/raw/master/us-states.csv")
+    ```
+   These data are tidy. Make them **wider** by making columns for each state and using the `cases` as the values. You should have only one row for each date. If you're getting many thousands of rows, you need to give `pivot_wider` some `id_cols` (see the `pivot_wider` documentation...). OR give `pivot_wider` a simpler data table...Either way works.
