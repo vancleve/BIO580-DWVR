@@ -299,9 +299,6 @@ library(nycflights13)
     How can you find all flights to those destinations?
 
 3.  Add the latitude and the longitude of the origin and destination airport to flights
-```{r}
-flights
-```
 
 4.  What do the tail numbers that don’t have a matching record in planes have in common?
     (Hint: one variable explains ~90% of the problems.)
