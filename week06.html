@@ -3562,10 +3562,9 @@ where only the non-matching rows of <code>x</code> are retained.</p>
 </ol>
 <section id="connecting-to-databases" class="level2">
 <h2 class="anchored" data-anchor-id="connecting-to-databases">Connecting to databases</h2>
-<p>You need to use a database interface or DBI to connect to a database. These are specific to the kind of database, PostgreSQL, MySQL, etc but the R package <code>DBI</code> is helpful here and has many of the interfaces builtin. In order to experiment, we’ll use a SQLite database of San Francisco bike share data from 2018 from <a href="https://github.com/ropensci/bikedata" class="uri">https://github.com/ropensci/bikedata</a>. You will first need to get the file from Google Drive and then download the file.</p>
+<p>You need to use a database interface or DBI to connect to a database. These are specific to the kind of database, PostgreSQL, MySQL, etc but the R package <code>DBI</code> is helpful here and has many of the interfaces builtin. In order to experiment, we’ll use a SQLite database of San Francisco bike share data from 2018 from <a href="https://github.com/ropensci/bikedata" class="uri">https://github.com/ropensci/bikedata</a>. You will first need to download the file.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;googledrive&quot;</span>)</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">drive_download</span>(<span class="fu">drive_get</span>(<span class="st">&quot;https://drive.google.com/file/d/10I12L4AdHjNyaUeYop1gJgyzOQIFl9is/view?usp=drive_link&quot;</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="st">&quot;https://www.dropbox.com/s/pe4aja9wbcpan9a/bikedb.sqlite?dl=1&quot;</span>, <span class="st">&quot;bikedb.sqlite&quot;</span>, <span class="at">mode=</span><span class="st">&quot;wb&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now you can connect to the database</p>
 <div class="cell">

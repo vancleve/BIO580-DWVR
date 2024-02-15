@@ -212,11 +212,10 @@ There are a few important differences between databases and the typical data fra
 
 ## Connecting to databases
 
-You need to use a database interface or DBI to connect to a database. These are specific to the kind of database, PostgreSQL, MySQL, etc but the R package `DBI` is helpful here and has many of the interfaces builtin. In order to experiment, we'll use a SQLite database of San Francisco bike share data from 2018 from <https://github.com/ropensci/bikedata>. You will first need to get the file from Google Drive and then download the file.
+You need to use a database interface or DBI to connect to a database. These are specific to the kind of database, PostgreSQL, MySQL, etc but the R package `DBI` is helpful here and has many of the interfaces builtin. In order to experiment, we'll use a SQLite database of San Francisco bike share data from 2018 from <https://github.com/ropensci/bikedata>. You will first need to download the file.
 ```{r}
 #| eval: false
-install.packages("googledrive")
-drive_download(drive_get("https://drive.google.com/file/d/10I12L4AdHjNyaUeYop1gJgyzOQIFl9is/view?usp=drive_link"))
+download.file("https://www.dropbox.com/s/pe4aja9wbcpan9a/bikedb.sqlite?dl=1", "bikedb.sqlite", mode="wb")
 ```
 Now you can connect to the database
 ```{r}
@@ -304,4 +303,3 @@ library(nycflights13)
     (Hint: one variable explains ~90% of the problems.)
     
 5. Use the `bikedb.sqlite` data and find the station with the most number of trips in the database. Use a join to find out where that station is located.
-
