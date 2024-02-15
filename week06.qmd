@@ -279,4 +279,32 @@ If you're interested more in SQL (and you don't have to be since you have `dbply
 
 # Lab ![](assets/beaker.png)
 
-Thursday...
+
+### Problems
+
+For some of these problems, we'll use data from the library `nycflights13`, which contains airline flight data from 2013; you will need to install this package. Once loaded, 
+you have access to five tables: `airlines`, `airports`, `flights`, `planes`, and `weather`.
+```{r}
+library(nycflights13)
+```
+
+1.  Find the 48 hours (over the course of the whole year) that have the worst delays. Cross-reference it with the weather data. Can you see any patterns?
+
+2.  Imagine you’ve found the top 10 most popular destinations using this code:
+    ```{r}
+    top_dest = flights |>
+      count(dest, sort = TRUE) |>
+      head(10)
+    ```
+    How can you find all flights to those destinations?
+
+3.  Add the latitude and the longitude of the origin and destination airport to flights
+```{r}
+flights
+```
+
+4.  What do the tail numbers that don’t have a matching record in planes have in common?
+    (Hint: one variable explains ~90% of the problems.)
+    
+5. Use the `bikedb.sqlite` data and find the station with the most number of trips in the database. Use a join to find out where that station is located.
+
