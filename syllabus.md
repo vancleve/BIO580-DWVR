@@ -259,7 +259,7 @@ as the semester progress.
 | 3    | 01/23 & 01/25 | Vectors, slicing, and map(ping)                            | [html](https://vancleve.github.io/BIO580-DWVR/week03.html) |
 | 4    | 01/30 & 02/01 | Getting data into R data.frames via files and spreadsheets | [html](https://vancleve.github.io/BIO580-DWVR/week04.html) |
 | 5    | 02/06 & 02/08 | Tidy Data                                                  | [html](https://vancleve.github.io/BIO580-DWVR/week05.html) |
-| 6    | 02/13 & 02/15 | Joins and databases                                        |                                                            |
+| 6    | 02/13 & 02/15 | Joins and databases                                        | [html](https://vancleve.github.io/BIO580-DWVR/week06.html) |
 | 7    | 02/20 & 02/22 | Text manipulation and regular expressions                  |                                                            |
 | 8    | 02/27 & 02/29 | Introduction to plotting and ggplot2                       |                                                            |
 | 9    | 03/05 & 03/07 | Plot types in ggplot2                                      |                                                            |
