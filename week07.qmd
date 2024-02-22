@@ -329,4 +329,6 @@ For reference, here is the RStudio regular expression cheat sheet:
     How many different studies in the database study something to do with the thyroid? How many reported no significant association for a `DISEASE/TRAIT`?
     
 4.  Using the GWAS data above, how many studies use at least 50,000 individuals in their `INITIAL SAMPLE SIZE`?\
-    Hint: you'll definitely need a regular expression for this and `str_extract` should be useful.
+    Hint: you'll definitely need a regular expression for this and `str_extract` should be useful. Getting all the numbers from `INITIAL SAMPLE SIZE` is tricky so get the first one as a start. If you're interesting in a challenge, get all the numbers and check them.
+    
+    

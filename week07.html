@@ -3606,13 +3606,13 @@ character</code></pre>
 <li><p>Write your own 2x2 regex crossword in the style of the puzzles in problem #1. Provide the puzzle and solution.</p></li>
 <li><p>Use GWAS Catalog data for this problem, which you can load like this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>us <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="st">&quot;https://github.com/nytimes/covid-19-data/raw/master/rolling-averages/us-counties-2020.csv&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>gwas <span class="ot">=</span> <span class="fu">read_tsv</span>(<span class="st">&quot;gwas-catalog-v1.0.3.1-studies-r2024-02-11.tsv&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Unlike our previous GWAS data, these data are just the studies (not the individual SNPs) but they are all the studies in the database.<br>
 For a description of the columns in this dataset, look here: <a href="https://www.ebi.ac.uk/gwas/docs/fileheaders#_file_headers_for_unpublished_studies" class="uri">https://www.ebi.ac.uk/gwas/docs/fileheaders#_file_headers_for_unpublished_studies</a>.</p>
 <p>How many different studies in the database study something to do with the thyroid? How many reported no significant association for a <code>DISEASE/TRAIT</code>?</p></li>
 <li><p>Using the GWAS data above, how many studies use at least 50,000 individuals in their <code>INITIAL SAMPLE SIZE</code>?<br>
-Hint: you’ll definitely need a regular expression for this and <code>str_extract</code> should be useful.</p></li>
+Hint: you’ll definitely need a regular expression for this and <code>str_extract</code> should be useful. Getting all the numbers from <code>INITIAL SAMPLE SIZE</code> is tricky so get the first one as a start. If you’re interesting in a challenge, get all the numbers and check them.</p></li>
 </ol>
 </section>
 </section>
