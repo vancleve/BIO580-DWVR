@@ -309,4 +309,24 @@ This is a good places to learn the basics too in a more fun way:
 
 # Lab ![](assets/beaker.png)
 
-Thursday...
+For reference, here is the RStudio regular expression cheat sheet: 
+[pdf on github](https://github.com/rstudio/cheatsheets/blob/4cfbc4c7ec5857b524473db219a1c4d402dd5e80/regex.pdf).
+
+### Problems
+
+1.  Go to <https://regexcrossword.com/challenges/beginner>. Solve the first four puzzles and submit the answers to them.
+
+2.  Write your own 2x2 regex crossword in the style of the puzzles in problem #1. Provide the puzzle and solution.
+
+3.  Use GWAS Catalog data for this problem, which you can load like this:
+    ```{r}
+    #| message: false
+    us = read_csv("https://github.com/nytimes/covid-19-data/raw/master/rolling-averages/us-counties-2020.csv")
+    ```
+    Unlike our previous GWAS data, these data are just the studies (not the individual SNPs) but they are all the studies in the database.\
+    For a description of the columns in this dataset, look here: <https://www.ebi.ac.uk/gwas/docs/fileheaders#_file_headers_for_unpublished_studies>.
+    
+    How many different studies in the database study something to do with the thyroid? How many reported no significant association for a `DISEASE/TRAIT`?
+    
+4.  Using the GWAS data above, how many studies use at least 50,000 individuals in their `INITIAL SAMPLE SIZE`?\
+    Hint: you'll definitely need a regular expression for this and `str_extract` should be useful.
