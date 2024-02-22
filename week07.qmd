@@ -321,7 +321,7 @@ For reference, here is the RStudio regular expression cheat sheet:
 3.  Use GWAS Catalog data for this problem, which you can load like this:
     ```{r}
     #| message: false
-    us = read_csv("https://github.com/nytimes/covid-19-data/raw/master/rolling-averages/us-counties-2020.csv")
+    gwas = read_tsv("gwas-catalog-v1.0.3.1-studies-r2024-02-11.tsv")
     ```
     Unlike our previous GWAS data, these data are just the studies (not the individual SNPs) but they are all the studies in the database.\
     For a description of the columns in this dataset, look here: <https://www.ebi.ac.uk/gwas/docs/fileheaders#_file_headers_for_unpublished_studies>.
