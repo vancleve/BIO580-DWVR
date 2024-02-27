@@ -1,0 +1,239 @@
+---
+title: 'Introduction to plotting and `ggplot2`'
+author: "Jeremy Van Cleve"
+date: 26 02 2024
+format: 
+  html:
+    self-contained: true
+---
+  
+# Outline for today
+  
+- Plotting with R `base` graphics (sucks!)
+- Basic plotting with `ggplot2`
+
+# Plotting with R `base` graphics
+
+Why do you even want to plot things?
+  
+<!-- Crowdsource! -->
+- See patterns / do comparisons
+- Data presentation
+
+The base package (basic functions included with R and automatically loaded) includes plotting functions that can be useful. You've already used it a few times in the problems but below, you will see that the limits of these functions become evident quickly and more advanced plotting functions are required. The package of functions we will use in place of the base functions is Hadley Wickham's `ggplot2`.
+
+Before plotting, you need some data. A common dataset used in data exploration courses in R is the "Gapminder" data, which is a collection of time series data for countries.
+```{r}
+#| message: false
+library(gapminder) # install it if you don't have it
+library(tidyverse)
+```
+```{r}
+glimpse(gapminder)
+```
+The data covers the statistics listed above for
+```{r}
+levels(gapminder$country)
+```
+142 countries.
+
+We've already seen some basic plots using `base::plot`. For example, let's plot how life expectancy has changed over the years
+```{r}
+plot(gapminder$year, gapminder$lifeExp)
+```
+
+You can modify the axis labels by adding the `xlab` and `ylab` arguments and give the plot a title with the `main` argument.
+```{r}
+plottitle = "Life expectancy over time for all countries in the Gapminder data" # save space in the code
+plot(gapminder$year, gapminder$lifeExp, 
+     xlab = "Year", ylab = "Life expectancy", main = plottitle)
+```
+
+Though there is a clear trend observable even at this scale, increasing life expectancy with time, but does this hold for individual countries? To see this, you could slice just a single country out of the data. Using the United States, for example,
+```{r}
+us = gapminder |> filter(country == "United States")
+plot(us$year, us$lifeExp, 
+     xlab = "Year", ylab = "Life expectancy", main = plottitle)
+```
+
+When plotting a couple of countries together, you can color the points by country by using the `col` argument to `plot`:
+```{r}
+usukjpcn = gapminder |> 
+  filter(country == "United States" | country == "United Kingdom" | country == "Japan" | country == "China" )
+usukjpcn
+
+plot(usukjpcn$year, usukjpcn$lifeExp, 
+     xlab = "Year", ylab = "Life expectancy", main = plottitle,
+     col = usukjpcn$country)
+
+legend('bottomright', legend = levels(usukjpcn$country), col = 1:4, pch = 1)
+```
+
+Uh oh, the legend includes all the countries! This is because slicing the data doesn't dropped unused factor levels. Dang. You can fix this using the `droplevels()` function
+```{r}
+usukjpcn = droplevels(usukjpcn)
+plot(usukjpcn$year, usukjpcn$lifeExp, 
+     xlab = "Year", ylab = "Life expectancy", main = plottitle,
+     col = usukjpcn$country)
+levels(usukjpcn$country)
+
+legend('bottomright', legend = levels(usukjpcn$country), col = 1:4, pch = 1)
+```
+
+So far, the basic `plot()` function is pretty useful. To see its limits, you can try something that **shouldn't** be that much harder: plotting these data as points connected by a line. At first pass, you could try giving the `plot()` function the `type = "l"` argument to indicated you want lines.
+```{r}
+plot(usukjpcn$year, usukjpcn$lifeExp, 
+     xlab = "Year", ylab = "Life expectancy", main = plottitle,
+     col = usukjpcn$country,
+     type = 'l')
+```
+
+However, while `plot()` could color points by country, it doesn't make individual lines for each country and simply makes one connected line. Getting around this in the basic `plot()` function is tedious. One way involves using the `lines()` function to indicate specifically each line you want. 
+```{r}
+# make an empty plot. lame.
+plot(0:0, xlim = c(1952, 2007), ylim = c(20, 85), 
+     xlab = "Year", ylab = "Life expectancy", main = plottitle, type = "n") 
+
+# make each line individually. again, lame.
+lines(filter(usukjpcn, country == "United States")$year, 
+     filter(usukjpcn, country == "United States")$lifeExp) 
+lines(filter(usukjpcn, country == "United Kingdom")$year, 
+     filter(usukjpcn, country == "United Kingdom")$lifeExp)
+lines(filter(usukjpcn, country == "Japan")$year, 
+     filter(usukjpcn, country == "Japan")$lifeExp) 
+lines(filter(usukjpcn, country == "China")$year, 
+     filter(usukjpcn, country == "China")$lifeExp)
+```
+
+That was quite tedious. Another way would be to have individual plots for each line.
+```{r}
+par(mfrow=c(1,4))
+plot(filter(usukjpcn, country == "United States")$year, 
+     filter(usukjpcn, country == "United States")$lifeExp, 
+     xlab = "Year", ylab = "Life expectancy", main = plottitle,
+     type = 'l')
+plot(filter(usukjpcn, country == "United Kingdom")$year, 
+     filter(usukjpcn, country == "United Kingdom")$lifeExp, 
+     xlab = "Year", ylab = "Life expectancy", main = plottitle,
+     type = 'l')
+plot(filter(usukjpcn, country == "Japan")$year, 
+     filter(usukjpcn, country == "Japan")$lifeExp, 
+     xlab = "Year", ylab = "Life expectancy", main = plottitle,
+     type = 'l')
+plot(filter(usukjpcn, country == "China")$year, 
+     filter(usukjpcn, country == "China")$lifeExp, 
+     xlab = "Year", ylab = "Life expectancy", main = plottitle,
+     type = 'l')
+```
+
+That was also very tedious. Not only that, notice that the y-axes have different ranges, which makes comparison across countries difficult. Correcting for this and other issues adds to the tedium. Using `ggplot2` to create these kind of plots is much easier.
+
+# Basic plotting with `ggplot2`
+
+The `ggplot2` package is built on the idea that graphics have can have a "grammar", or set or rules, that specifies how they can and should be constructed. Implementing these rules not only makes creating graphics easier, but it makes such graphics consistent and clear. Wickham borrows this idea from the book, "The Grammar of Graphics"" by Wilkinson, Anand, and Grossman (2005)[^1]. While this structure may seem a bit artificial at first, it makes creating graphics very modular and building up complex graphics much easier.
+
+To understand how `ggplot2` works, first consider how the following example replicates the life expectancy by year plot above:
+```{r}
+library(ggplot2)
+ggplot(data = gapminder) + 
+  geom_point(aes(x = year, y = lifeExp))
+```
+
+The first line has the function `ggplot`, which creates a coordinate system for the plot that you can add "layers" to. The argument to `ggplot` indicates which dataset to use. 
+
+Adding layers is accomplished by "adding" to the base plot with **`+`** and additional features via additional functions. The first feature added above is `geom_point()`, which adds a layer of points and creates a scatter plot. `ggplot2` comes with many other "geometries", which are really just other kinds of visual objects, like lines and boxes.
+
+Each `geom()` function takes a `mapping` argument that defines how variables map to the visual objects in the plot. The `mapping` argument is always paired with the `aes()` function, which stands for "aesthetics", and the `x` and `y` arguments of `aes()` specify which variables correspond to which axis.
+
+## Aesthetic mapping with `aes()`
+
+In addition to the `x` and `y` axes, you can map variables to the color of the point. Above, you did this using the `country` variable. Now, repeat this with `ggplot()`.
+```{r}
+usukjpcn |> ggplot() + 
+  geom_point(mapping = aes(x = year, y = lifeExp, color = country))
+```
+The above code with `ggplot2` is both simpler and easier to read than the code creating the similar plot with the basic `plot()` function. For example, `ggplot` adds the legend automatically when you add an aesthetic like color.
+
+Color is just one additional aesthetic. Others include the size and shape of the point. 
+![](assets/aesthetics.png)
+
+For example, you can make the size of the point proportional to the population:
+```{r}
+usukjpcn |> ggplot() + 
+  geom_point(mapping = aes(x = year, y = lifeExp, color = country, size = pop))
+```
+Adding another aesthetic like size caused `ggplot` to automatically add another legend. Great! We could even try packing in another aesthetic, shape.
+```{r}
+usukjpcn |> ggplot() + 
+  geom_point(mapping = aes(x = year, y = lifeExp, color = gdpPercap, size = pop, shape = country))
+```
+It's starting to get a bit cluttered, but playing around a bit can help you figure out which aesthetic will visually help you best see patterns or differentiate different variable values.
+
+The shape of the points has many options and can be specified with a number from below
+![](assets/point_types.png)
+where the hollow shapes (0–14) have a border determined by `color`, the solid shapes (15–20) are filled with `color`, the filled shapes (21–24) have a border of color and are filled with `fill`. For example,
+```{r}
+usukjpcn |> ggplot() + 
+  geom_point(mapping = aes(x = year, y = lifeExp, shape = 23, color = country, fill = pop)) +
+  scale_shape_identity()
+```
+where `scale_shape_identity()` tells `ggplot` to use the number we give to `shape` directly instead of just assigning it something by default as it would do for any other variable. We will talk more about scales when we talk about how to modify different plot elements.
+
+With knowledge of `aes`, we can now ready recreate the multiline plot from above.
+```{r}
+ggplot(data = usukjpcn) + 
+  geom_line(mapping = aes(x = year, y = lifeExp, color = country))
+```
+The only change you had to make was to change `geom_point` to `geom_line`, for a line plot. Easy peasy.
+
+## Facets
+
+Finally, `ggplot2` makes creating multiple plots very easy with "facets", which are just subplots that each correspond to a specific value of a variable or more generally to a specific subset of the data. To add facets in using `ggplot()`, you need the `facet_wrap()` or `facet_grid()` function. In the multiple plots created above with the basic graphics, the variable was country and each plot was the subset of data for each of the four countries. For example, with `ggplot()`,
+```{r}
+usukjpcn |> ggplot() + 
+  geom_line(mapping = aes(x = year, y = lifeExp, color = country)) +
+  facet_wrap(vars(country))
+```
+
+The first argument to `facet_wrap()` uses the `vars` function, which like `aes`, is a function that can take unquoted variable or column names that you want to use. Variables for `facet_wrap` should be categorical or discrete (like factors). For numerical variables, it is likely that are many possible values, so care is needed when trying to use these for `facet_wrap` plots are *many* plots could be created.
+
+With `facet_wrap`, a vector of plots is created where each plot is a specific combination of the variables given to `vars`. For example, we could look at the relationship between `lifeExp` and `log10(gdpPercap)` and see if it is different before or after the fall of the Soviet Union.
+```{r}
+gapminder |> ggplot(aes(x = lifeExp, y = log10(gdpPercap))) +
+  geom_point() +
+  facet_wrap(vars(continent, year > 1990))
+```
+Now, `facet_wrap` plots all the possible combinations of `continent` and `year > 1990`.
+
+For two different variables in the facets, you can make a grid of plots with `facet_grid` where the values of one variable change along the rows of the grid and the values of the other variable change along the columns. For example, changing the above plot of `lifeExp` vs `log10(gdpPercap)` with `continent` and `year > 1990` as facets to `facet_grid` yields
+```{r}
+gapminder |> ggplot(aes(x = lifeExp, y = log10(gdpPercap))) +
+  geom_point() +
+  facet_grid(vars(continent), vars(year > 1990))
+```
+Note that now we identify the row variable first and the column variable second and that each is identified in a separate `vars` function. This allows us to specify multiple variables for both the rows and columns so that the `facet_grid` can cover many possible combinations of variables.
+
+Let's use `facet_grid` on the genomic imprinting data from the Babak et al. (2015) study (this time in tidy format),
+```{r}
+#| message: false
+imprint = read_csv("babak-etal-2015_imprinted-mouse_tidy.csv", na = "NA")
+```
+and plot a histogram of the expression values for a subset of the data (four genes and four tissues)
+```{r}
+fourgenes = imprint |> 
+  filter((Genes == "IGF2" | Genes == "GRB10" | Genes == "MEG3" | Genes == "PEG3") &
+         (tissue == "Preoptic Area (ref)" | tissue == "Hypothalamus" | 
+          tissue == "e17.5 Brain" | tissue == "e9.5 Yolk Sac" ))
+
+fourgenes |> ggplot() +
+  geom_histogram(aes(expression)) +
+  facet_grid(Genes ~ tissue)
+```
+
+We've used a histogram now to count the fraction of times each expression value shows up in the data and used `facet_grid` to separate out expression by tissue type and gene name. Positive values of expression indicate expression from the paternal chromosome only and negative values from the maternal chromosome. Thus, this plot shows how some genes are "imprinting" differently depending on the tissue type.
+
+[^1]: see the Canvas course site for a copy of the book
+
+# Lab ![](assets/beaker.png)
+
+Thursday...
