@@ -227,7 +227,7 @@ fourgenes = imprint |>
 
 fourgenes |> ggplot() +
   geom_histogram(aes(expression)) +
-  facet_grid(Genes ~ tissue)
+  facet_grid(vars(Genes), vars(tissue))
 ```
 
 We've used a histogram now to count the fraction of times each expression value shows up in the data and used `facet_grid` to separate out expression by tissue type and gene name. Positive values of expression indicate expression from the paternal chromosome only and negative values from the maternal chromosome. Thus, this plot shows how some genes are "imprinting" differently depending on the tissue type.
