@@ -236,4 +236,30 @@ We've used a histogram now to count the fraction of times each expression value 
 
 # Lab ![](assets/beaker.png)
 
-Thursday...
+1.  Use the GWAS data (`gwas_catalog_v1.0.2-associations_e104_r2021-09-23_no-waist_hip_body_blood_education_math_top100.tsv`): 
+    - Create a plot with `ggplot()` that shows the `PVALUE_MLOG` as a function of `CHR_POS` for **two** different values of `DISEASE/TRAIT` (pick your favorites!)
+    - Make the points for each disease/trait a different color
+
+2.  Use the `gapminder` data:
+    - Create a line plot with `ggplot()` that shows life expectancy on the y-axis and time on the x-axis.
+    - Make each line represent a **country**   
+      (hint: look here: <https://ggplot2.tidyverse.org/reference/aes_group_order.html> to learn how to group the data appropriately)
+    - Color each line by the **continent**
+    - Make points whose size is proportional to GDP per capita (variable `gdpPercap`)
+    
+3.  Create a plot like the one in Problem 2
+    - Except, the new plot has multiple subplots where each subplot is a different continent. 
+    - No need to color by continent though.
+    - Instead, color the points red where countries at that year had greater than 50 million people.  
+      (hint: try to use Google for help here. there are multiple ways to do this too :-) )
+      
+4.  We'll use a CDC dataset on COVID-19 mortality from here:\
+    <https://data.cdc.gov/Public-Health-Surveillance/Monthly-COVID-19-Death-Rates-per-100-000-Populatio/exs3-hbne/about_data>\
+    It has mortality rates per 100k people in the `crude_rate` column and demographic groups in the `subgroup1` and `subgroup2` columns.\
+    ```{r}
+    #| message: false
+    covid = read_csv("Monthly_COVID-19_Death_Rates_per_100k_by_Age_Race_Ethnicity_Sex_Region_20240229.csv")
+    ```
+    - Plot the covid death rate in `crude_rate` vs the date for 2020-2021 using `facet_wrap` to make this a set of plots for each age group in the data. First filter by `group` to help get the data to the right subset of rows.
+    - Plot the covid death rate in `crude_rate` vs the date for 2020-2021 using `facet_wrap` to make a set of plots for each race/ethnicity group in the data. Think carefully about what might **not** be included in these data that might explain any differences you see between these groups.
+    - Plot the covid death rate in `crude_rate` vs the date for 2020-2021 using `facet_grid` to make a grid of plots for each combination of age and race/ethnicity group. Again, filter by `group` first to get the right subset of data.
