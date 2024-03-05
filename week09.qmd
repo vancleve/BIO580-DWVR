@@ -1,0 +1,280 @@
+---
+title: 'More `ggplot2`: plot types'
+author: "Jeremy Van Cleve"
+date: 05 03 2024
+format: 
+  html:
+    self-contained: true
+---
+  
+# Announcements
+
+- Continue (start?!) brainstorming the dataset you want to use for your figures and presentation.
+- I'm always available to help with picking a dataset and analyzing it.
+
+# Outline for today
+
+- Smoothed line plots
+- Plotting distributions
+    - Bar plots
+    - Histograms
+    - Box plots
+
+The power of a package like `ggplot2` is not in the fact that it can do many different kinds of plots but rather that creating these plots is a logical processes. Changing from one plot type to another often simply requires just changing the "geometry" object and potentially the "aesthetics", or how variables map to different parts of the geometry. 
+
+Nevertheless, `ggplot2` does allow one to create many different kinds of plots and understanding how to use these plots and when they are useful is instructive for using other visualization packages in R and other languages.
+
+# Reading in some COVID-19 data from the New York Times
+
+We'll continue with the New York Times COVID-19 daily case and death data for the US.
+```{r}
+#| message: false
+library(tidyverse)
+
+us = read_csv("https://github.com/nytimes/covid-19-data/raw/master/rolling-averages/us-states.csv")
+pop = read_csv("https://github.com/vancleve/BIO621-DWVR/raw/main/us_census_population_totals_est_2020-2021.csv")
+us = us |> left_join(pop |> mutate(state = State, population = `2021`) |> select(state, population)) |>
+  select(!contains("avg")) |>
+  mutate(cases_per_100k = signif(cases/population*1e5, digits = 3)) |>
+  mutate(deaths_per_100k = signif(deaths/population*1e5, digits = 3)) |>
+  mutate(day = factor(weekdays(date), 
+                      levels = c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))) |>
+  mutate(month = factor(months(date), 
+                        levels = c("January", "February", "March", "April", "May", "June", 
+                                   "July", "August", "September", "October", "November", "December"))) |>
+  filter(!is.na(population), cases >= 0, deaths >= 0) |>
+  select(-population)
+
+```
+The above code also loads in estimated population sizes for each state in 2021 from [US Census data](https://www.census.gov/data/tables/time-series/demo/popest/2020s-state-total.html) and gets rid of rows for which there aren't population data. We also add a few columns for the day and month that will be helpful later and remove days where cases were negative (which was a way for states to correct prior mistakes in reporting).
+
+Let's work on a slice of these data with just the cases in Kentucky, West Virginia, and Tennessee for the months of August and September 2022:
+```{r}
+ky_wv_tn_cases_jul_aug_2022 = 
+  us |>
+  select(-contains("deaths")) |>
+  select(-geoid) |>
+  filter(state %in% c("Kentucky", "West Virginia", "Tennessee")) |>
+  filter(date >= "2022-07-01" & date <= "2022-08-31")
+
+ky_wv_tn_cases_jul_aug_2022
+```
+Note the use of the match operator `%in%`. It's a nice way to say that an element should exactly match one of a list of values.
+
+# Smoothed line plots
+
+In previous weeks, you have produced simple scatter and line plots. With these the KY, WV, and TN case data, we can produce a scatter plot with `geom_point`.
+```{r}
+ky_wv_tn_plot = ky_wv_tn_cases_jul_aug_2022 |> 
+  ggplot(aes(x=date, y=cases_per_100k, color=state))
+ky_wv_tn_plot + geom_point()
+```
+We can produce a line through the points by adding `geom_line`.
+```{r}
+ky_wv_tn_plot + geom_point() + geom_line()
+```
+Producing a line through these points isn't that helpful in showing a trend because the data is very spikey. This has to do with states often not reporting data on the weekends and then adding weekend data to the next business day. Some states only report data once a week!
+
+To get a better sense of the trend, you might want a trend line like a linear regression. R has a very sophisticated regression framework but accessing it in `ggplot2` only requires using the `geom_smooth()` function.
+```{r}
+ky_wv_tn_plot + 
+  geom_point(alpha = 0.3) + # alpha controls transparency: 0 = clear; 1 = opaque
+  geom_smooth(lwd = 0.8) # lwd = line width
+```
+
+Obviously, `geom_smooth()` produced a nice smooth line, but it's not linear. Taking a closer look at the `geom_smooth()` function help, you can see that the "statistic" the function uses is `stat_smooth()`. Generally in `ggplot2`, each geometry has a default statistic associated. Histograms have a "count" statistic associated, scatter plots (`geom_point`) have an "identity" statistic (i.e., just return the coordinates of the point), etc. The statistic essentially tells `ggplot` how to map the underlying data to the variable that you specify in the aesthetic using `aes`.
+
+Looking more closely at the help, `geom_smooth()` uses the `method = loess`, which fits a polynomial (default is a quadratic) to each point of the data using least squares. To fit instead a simple straight line, change `method = "lm"`, which just uses the linear model `lm()` function:
+```{r}
+ky_wv_tn_plot + 
+  geom_point(alpha = 0.3) +
+  geom_smooth(lwd = 0.8, method = 'lm')
+```
+
+Returning to the default `loess` regression line, you can make the line smoother or more "wiggly" by changing the `span` argument, which is the fraction of points used to fit each local regression. For example, changing the `span` from the default of 0.75 to 0.1 produces
+```{r}
+ky_wv_tn_plot + 
+  geom_point(alpha = 0.3) + 
+  geom_smooth(lwd = 0.8, span = 0.1)
+```
+
+Another default of the `geom_smooth()` function is to produce a 95% confidence interval, which is represented in the gray bands. To get rid of this, just set `se = FALSE`:
+```{r}
+ky_wv_tn_plot + 
+  geom_point(alpha = 0.3) +
+  geom_smooth(lwd = 0.8, method = 'lm', se = FALSE)
+```
+
+# Plotting distributions
+
+Almost certainly, your data will contain multiple samples or replicates of a measurement. These samples produce a distribution, and analyzing these data often involves asking questions about this distribution, such as what is its mean, median, standard deviation, etc. Visualizing the distribution is also crucial and there are a number of plot type that are used for this task.
+
+## Bar plots
+
+If your data has discrete categories (i.e., "categorical" data), then you may want a simple bar plot. As an example, we can create a bar plot with how many days cases per 100k exceeded 100.
+```{r}
+cases_exceed_100_per_100k = 
+  us |>
+  mutate(exceed_100_per_100k = cases_per_100k >= 100) |>
+  filter(exceed_100_per_100k == TRUE)
+
+cases_exceed_100_per_100k |> select(date, state, exceed_100_per_100k)
+```
+
+Each row of this table is now a different state. Plot these data in a bar plot using `geom_bar()`, which uses the `count` statistic on the data and thus plots the number of days where a state exceeds 100 cases per 100k.
+```{r}
+cases_exceed_100_per_100k |> 
+  ggplot() +
+  geom_bar(aes(x = exceed_100_per_100k))
+```
+
+To see which days of the week account for those days where the cases exceed 100 per 100k, we can can color the portion of the bar according to the day of the week by just adding the `fill` aesthetic where `day = weekdays(date)` uses a function that converts a date to the date of the week. This produces a so-called "stacked" bar plot.
+```{r}
+cases_exceed_100_per_100k |> 
+  ggplot() +
+  geom_bar(aes(x = exceed_100_per_100k, fill = day))
+```
+Not surprisingly given reporting biases, Mondays and Sundays account for a larger and smaller fraction, respectively, of the high case count days. Also note that when we created a day of the week variable, `day`, we made it as a factor and specified the `levels` in the order of the days of the week. This is what ensured the days were plotted in a nice order.
+
+If you do not want the bars stacked by rather placed side by side, use `position = "dodge"` in `geom_bar()`:
+```{r}
+cases_exceed_100_per_100k |> 
+  ggplot() +
+  geom_bar(aes(x = exceed_100_per_100k, fill = day), position = "dodge")
+```
+
+Other options for `position` are `identity`, which just places the bars on top of each other (use the `alpha` option to make the bars easier to see in this case), and `fill`, which makes the bars of equal height and the y-axis measure the fraction in each category.
+```{r}
+cases_exceed_100_per_100k |> 
+  ggplot() +
+  geom_bar(aes(x = exceed_100_per_100k, fill = day), position = "fill")
+```
+
+Finally, you might notice the label on the tick mark on the above plots, `TRUE`. This is because the bar plot is counting the number of each discrete value it finds in the `exceed_100_per_100k` column. Since we only have rows in this table where `exceed_100_per_100k == TRUE`, we could equally just set `x=state` in the aesthetic and get a bar plot separated by state.
+```{r}
+cases_exceed_100_per_100k |> 
+  ggplot() +
+  geom_bar(aes(x = state, fill = day)) +
+  coord_flip() # coordinate flip makes reading the state names easier
+```
+
+
+## Histograms
+
+To get a histogram, we use the `geom_histogram` function. We can for example look at how many days across all the states had a certain number of cases per 100k.
+```{r}
+us |> ggplot() +
+  geom_histogram(aes(x = cases_per_100k))
+```
+With a distribution that falls off quickly after a big spike, it can useful to put the y-axis on a log10 scale.
+```{r}
+us |> ggplot() +
+  geom_histogram(aes(x = log10(1 + cases_per_100k)))
+```
+
+You can add additional information, like days of the week have which number of cases per 100k
+```{r}
+us |> ggplot() +
+  geom_histogram(aes(x = log10(1 + cases_per_100k), fill=day))
+```
+
+This defaults to a stacked histogram, so switch to `identity` to better see how the two sample size categories compare (using `alpha` to get some transparency).
+```{r}
+us |> ggplot() +
+  geom_histogram(aes(x = log10(1 + cases_per_100k), fill=day), position = "identity", alpha = 0.5)
+```
+But maybe thats too many days to stack together, so let's just compare Sunday and Monday.
+```{r}
+us |> filter(day %in% c("Sunday", "Monday")) |> ggplot() +
+  geom_histogram(aes(x = log10(1 + cases_per_100k), fill=day), position = "identity", alpha = 0.5)
+```
+Now we can see how Monday is very similar to Sunday but just shifted over to indicate the higher overall number of cases due to a lack of reporting on the weekends.
+
+You can just draw lines instead of filled bars using `geom_freqpoly()`
+```{r}
+us |> filter(day %in% c("Sunday", "Monday")) |> ggplot() +
+  geom_freqpoly(aes(x = log10(1 + cases_per_100k), color=day))
+```
+
+You might have noticed that R keeps reminding you to adjust the `binwidth`. This is simply the width of the bins on the x-axis. For example, a binwidth of 0.2 yields
+```{r}
+us |> filter(day %in% c("Sunday", "Monday")) |> ggplot() +
+  geom_freqpoly(aes(x = log10(1 + cases_per_100k), color=day), binwidth = 0.2)
+```
+
+Suppose that you want to smooth the above plot so that it looks like some continuous distribution. The statistical method used to do this is called a "kernel density estimate" or KDE. Essentially, a basic KDE tries to combine Gaussian distributions together in a way to approximate empirical distribution. Its basically the continuous version of a historgram (which has discrete bins). The geometry function to use for a KDE is `geom_density`.
+```{r}
+us |> filter(day %in% c("Sunday", "Monday")) |> ggplot() +
+  geom_density(aes(x = log10(1 + cases_per_100k), fill = day), alpha = 0.3)
+```
+Notice how the y-axis has a different scale now. This is because the area under the curve of the KDE must sum to one and the y-axis measures the density, or approximately the probability, of a specific log10 number of cases per 100k. The histogram can be normalized too by dividing each curve by the total number of days in the dataset.
+
+## Box plots
+
+Suppose now that you want to plot the distribution of the number of cases per day per 100k for each state.
+```{r}
+us |> ggplot() +
+  geom_histogram(aes(x = log10(1 + cases_per_100k), fill = state), alpha = 0.3)
+```
+
+Yikes. Too many state. You need a more condensed way to plot the distribution of cases per 100k for each state. First, you can just plot the points directly.
+```{r}
+us |> ggplot() +
+  geom_point(aes(x = state, y = log10(1 + cases_per_100k))) + 
+  coord_flip()
+```
+
+This is better, but many of the points overlap. To get around this, you can use `geom_jitter()`, which spreads the points out (and some `alpha`).
+```{r}
+us |> ggplot(aes(x = state, y = log10(1 + cases_per_100k))) +
+  geom_jitter(alpha = 0.5) +
+  coord_flip()
+```
+
+That is sort of an improvement, but it's still hard to see patterns because the points are still rather dense One plot that is particularly good at summarizing distributions is a box plot. Typically, a box plot show the median, the interquartile interval as a box (middle 50% of the data) and "whiskers" that extend to data points within 1.5 times the interquartile interval of the box. The only points plotted are outliers.
+![](assets/boxplot.png)
+
+For the data on cases per 100k per day for each state, the box plots are:
+```{r}
+us |> ggplot(aes(x = state, y = log10(1 + cases_per_100k))) +
+  geom_boxplot() +
+  coord_flip()
+```
+
+The box plots make it much easier to see the central tendency (median) as well as how dispersed each distribution is. For example, the above plot reveals that states like Arkansas have some of the highest median case rates. You can modify boxplot properties including the color of the outliers using `outlier.color`.
+```{r}
+us |> ggplot(aes(x = state, y = log10(1 + cases_per_100k))) +
+  geom_boxplot(outlier.color = "red") +
+  coord_flip()
+```
+
+It's easier to read the box plots if they are organized by the median value. To do this, you the `reorder` function for the x-axis in the aesthetic argument and replace `x = state` with `x = reorder(state, cases_per_100k, FUN = median)`. 
+```{r}
+us |> ggplot(aes(x = reorder(state, cases_per_100k, FUN = median), y = log10(1 + cases_per_100k))) +
+  geom_boxplot(outlier.color = "red") +
+  coord_flip()
+```
+This `reorder` function helps with our bar plot from above with the number of days above with more than 100 cases per 100k. This example is a little more complicated because we need to tell `reorder` which variable we want to sort the states by but the variable we want is actually the count of the number of days with more 100 cases per 100k, which the bar plot calculates. So we have to create that column first by first using `group_by` then `mutate(count = n())` to count the number of rows for each state. Now we can reorder.
+```{r}
+cases_exceed_100_per_100k |> 
+  group_by(state) |>
+  mutate(count = n()) |>
+  ggplot() +
+  geom_bar(aes(x = reorder(state, count), fill = day)) +
+  coord_flip() # coordinate flip makes reading the state names easier
+```
+
+Finally, a variant of the box plot is called a "violin plot". Violin plots show the probability density using KDE. Let's plot them for a subset of states
+```{r}
+us |> 
+  filter(state %in% c("Vermont", "California", "Kentucky", "New York", "North Dakota", "Texas", "Tennessee", "Florida")) |>
+  ggplot(aes(x = reorder(state, log10(1 + cases_per_100k), FUN = median), y = log10(1 + cases_per_100k))) +
+  geom_violin() +
+  coord_flip()
+```
+
+# Lab ![](assets/beaker.png)
+
+### Problems
+
+Thursday...
