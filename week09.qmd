@@ -277,4 +277,26 @@ us |>
 
 ### Problems
 
-Thursday...
+1. Use the `gapminder` data (`library(gapminder)`):
+    - Create a box plot where the x-axis is `year` and each box plot shows the distribution of life expectancy for each year.
+    - Add points with jitter on top of the box plot with the color according to continent.
+
+2. Use the `gapminder` data (`library(gapminder)`):
+    - Plot life expectancy on the x-axis and GDP per capita on the y-axis (plot the points).
+    - Add a regression line (without confidence interval) for **each continent** where each line is colored by continent.
+    - You may use any regression method you prefer.
+
+3. Use the imprinting data from Babak et al. (2015) (`babak-etal-2015_imprinted-mouse_tidy.csv`):
+    - Plot the distribution of gene expression values that are positive (expression from the paternal chromosome) and the distribution of expression values that are negative (expression from the maternal chromosome) on the same plot.
+    - Choose your favorite plot type for this question (histogram or KDE).
+    
+4.  Use the following CDC COVD-19 death data for this problem. It comes from the CDC WONDER database (<https://wonder.cdc.gov/>).
+    ```{r}
+    cdc_data = read_tsv("cdc_covid19_mort_rates_state-age-sex_2020-2023.tsv")
+    ```
+    Create boxplots of the deaths per 100k for each age group in the data with the following features
+    - Use `cood_flip` to have the age groups on the y-axis and the deaths on the x-axis
+    - Order the boxplots by the ages from youngest to oldest.
+    - Use `facet_grid` to make a grid of these plots with `Gender` across the columns and the year down the rows (hint: use the `year` function on the `Date`)
+    
+5.  Use CDC data from above. Plot the `Deaths_per_100k` over time for each different age group using `facet_wrap`. When was the COVID-19 vaccine introduced and which panel in the plot is most informative for this and why?
