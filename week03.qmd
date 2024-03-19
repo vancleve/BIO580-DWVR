@@ -261,12 +261,12 @@ This is a big table so use the `str(us_hosps_deaths)` function to get informatio
 
 3.  How many COVID-19 deaths were there outside of California in the month of August 2021?
 
-4.  Which US state has the second fewest number of COVID-19 hospitalizations in 2021? Use the column `total_adm_all_covid_confirmed_past_7days`\
+4.  Which US state has the second fewest COVID-19 hospitalizations in 2021? Use the column `total_adm_all_covid_confirmed_past_7days`\
     (hint: get a vector of all the (unique) states)\
     (hint: use `sapply` on that vector with an anonymous function that sums the hospitalization column for the right state and dates)\
     (hint: use `sort` to help you find the second fewest hospitalizations)
 
-5. Which week in 2021 had the highest number of hospitalization in the country (across all states and territories)? Use the column `total_adm_all_covid_confirmed_past_7days`\
+5. Which week in 2021 had the highest number of hospitalizations in the country (across all states and territories)? Use the column `total_adm_all_covid_confirmed_past_7days`\
    (hint: use `sapply` and `sum` to get the totals for each date in a way similar to question 4. Then use the `order` function to give you the right order to sort the dates...)
    
    

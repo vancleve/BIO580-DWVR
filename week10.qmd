@@ -1,0 +1,324 @@
+---
+title: 'Finessing plots in `ggplot2`'
+author: "Jeremy Van Cleve"
+date: 19 03 2024
+format: 
+  html:
+    self-contained: true
+---
+  
+# Outline for today
+
+- Reminders
+- Principles of displaying data
+- Modifying plot elements
+- Themes
+
+# Principles of displaying data
+
+While there is a lot of art in designing figures to display data, there is also some science. Researchers interested in designing effective figures have found some helpful rules of thumb that take advantage of simple intuitions as well as empirical results from psychology and neuroscience.
+
+## More data. Less ink.
+
+In his book, "The Visual Display of Quantitative Information"[^1], Edward Tufte states that
+
+> Data-ink is the non-erasable core of the graphic, the non-redundant ink arranged in response to variation in the numbers represented
+
+and emphasizes that the "redundant data-ink" should be minimized. In other words, use as few visual elements as necessary to display your data. For example, a bar chart simply shows the relative magnitude of different factors, and thus needs only bars lined up next to one another for visual comparison. Yet, many bar charts come with "chart junk", which are elements that are unnecessary for displaying the data. The example below shows how removing "chart junk" can make a bar chart much simpler, easier to read, and even more attractive (at least in terms of elegance and simplicity).
+
+![https://www.darkhorseanalytics.com/blog/data-looks-better-naked](assets/data-ink.gif)
+
+This rule can and should be applied to tables as well. The example below shows how removing the chart junk from the table can make it visually much simpler and easier to read without losing the ability to easily distinguish rows or compare across columns. The example also displays some useful rules for tables, such as removing unnecessary horizontal lines, aligning text and numbers correctly, and using row spacing to help distinguish rows.
+
+![https://www.darkhorseanalytics.com/blog/clear-off-the-table](assets/clear-off-the-table.gif)
+
+## Visual properties of graphical elements
+
+Nobel prize-winning work in neuroscience by David Hubel and Torsten Wiesel (among others) showed that the visual cortex is designed to recognize certain basic visual features, such as orientation and contrast that distinguishes edges. These basic features are then assembled into more complex visual objects in other brain regions. Knowing that some visual features may be more "basic" than others with respect to how they are processed by the brain means that you can leverage those features to make graphics easier to read.
+
+![Orientation columns are sensitive to visual input in a certain direction.](assets/visual_pinwheel.png)
+
+An example of how some visual elements are more basic than others comes from the work by William Cleveland and Robert McGill on the speed and accuracy that people have in distinguishing specific graphical elements [^2]. The table below shows these elements and their rank from most to least accurately distinguishable.
+
+|Rank | Graphical element |
+|-----+-------------------|
+| 1   | Positions on a common scale |
+| 2   | Positions on the same but nonaligned scales |
+| 3   | Lengths |
+| 4   | Angles, slopes |
+| 5   | Area |
+| 6   | Volume, color saturation |
+| 7   | Color hue |
+
+The figure below gives you a sense of what each of these elements are.
+
+![Graphical elements from hardest to easiest to distinguish](assets/visual_tasks.png)
+
+As an example, a pie chart, which uses angles to indicate the relative size of a category, can be harder to read than a bar chart, which uses positions on a common scale. In other words, never use a pie chart!
+
+![Pie vs. bar chart](assets/pie_bar_chart.png)
+
+## Gestalt principles
+
+Gestalt ("shape" in German) principles come from German psychologists in the early 20th century who tried to come up with the rules for perception. These rules are built on common sense intuitions and can be useful in composing figures, particularly with respect to grouping related parts of a figure. The general rule is that objects that look alike, are close to one another, connected by lines or enclosed together belong together somehow.
+
+1. **Similarity**. Objects with similar color, shape, or orientation are grouped together. 
+
+![Grouping by similar color, shape, etc.](assets/similarity.png)
+
+2. **Proximity**. Objects close to each other are grouped together.
+
+![Grouping by proximity](assets/proximity.png)
+
+3. **Connection**. Objects linked to each other are grouped together.
+4. **Enclosure**. Objects enclosed together are grouped together.
+
+![Connection via lines and enclosure via circle](assets/lines_enclosure.png)
+
+## (Bad) Examples
+
+In "The Visual Display of Quantitative Information", Tufte said of this graphic
+
+> This may well be the worst graphic ever to find its way into print"
+
+![Graphic from the magazine *American Education*.](assets/chart_junk.jpg)
+
+Here is another example to get one's blood boiling from (ironically) a 2012 report on "World Happiness".
+
+![Figure 11/12(?) from World Happiness Report (2012), editted by Helliwell et al.](assets/3d-column-chart-of-awesome.png)
+
+Tufte has many other bad examples in the above book and his others that you can find here: <https://www.edwardtufte.com/tufte/books_vdqi>. Many folks have put together lists of dos and do nots for data presentation. Here is one from Dr. Chenxin Li:
+<https://github.com/cxli233/FriendsDontLetFriends>.
+
+# Modifying plot elements
+
+With all the basic tools of `ggplot2`, you can already implement many of the visual design principles described above. The remaining changes you might need to make include altering the **labels**, **annotations**, **coordinate system or scaling**, **color scaling**, or **plot size**.
+
+## Labels
+
+You have already seen how to add simple labels to simple plots, but now you will add labels to `ggplot2` plots. Adding labels in `ggplot2` is accomplished with the `labs()` function. For example, if you load the CDC COVID-19 mortality data below,
+```{r}
+#| message: false
+library(tidyverse)
+
+cdc_data = read_tsv("cdc_covid19_mort_rates_state-age-sex_2020-2023.tsv")
+```
+you can plot the deaths for older folks 75-84 and then add a title easily
+```{r}
+plot_deaths75to84_ky_ny_fl = cdc_data |>
+  filter(Age == "75-84 years") |>
+  filter(State %in% c("Kentucky", "New York", "Florida")) |>
+  ggplot(aes(x=Date, y=Deaths_per_100k, color=State))
+plot_deaths75to84_ky_ny_fl + geom_point(alpha = 0.3) + 
+  geom_smooth(lwd = 0.5, span = 0.1) +
+  labs(title = "COVID-19 Deaths ages 75-84")
+```
+
+You can also add a `subtitle`, which is additional detail below the title, and a `caption`, which should describe the data in the plot.
+```{r}
+#| eval: false
+plot_deaths75to84_ky_ny_fl + geom_point(alpha = 0.3) + 
+  geom_smooth(lwd = 0.5, span = 0.1) +
+  labs(title = "COVID-19 Deaths ages 75-84",
+       subtitle = "Data from https://wonder.cdc.gov/",
+       caption = "The pandemic was particularly deadly to older folks in New York in the first wave,\nbut subsequent waves saw higher mortality in Kentukcy and Florida")
+```
+
+Labels can also be added to the axes and the legend.
+```{r}
+plot_deaths75to84_ky_ny_fl + geom_point(alpha = 0.3) + 
+  geom_smooth(lwd = 0.5, span = 0.1) +
+  labs(title = "COVID-19 Deaths ages 75-84",
+       x = "Date", y = "Deaths per 100k persons", color = "State")
+```
+
+Mathematical symbols can be added by using `expression()` instead of the quotation characters "". The `quote` function also works in simple cases. Check `?plotmath` for options. For example,
+
+```{r}
+plot_deaths75to84_ky_ny_fl + geom_point(alpha = 0.3) + 
+  geom_smooth(lwd = 0.5, span = 0.1) +
+  labs(title = expression("This is an integral" ~ integral(f(x)*dx, a, b) ~ "that doesn't mean anything"),
+       x = expression(x[y]^z),
+       y = expression(frac(y,x) == frac(alpha, beta)))
+```
+Note above that we glue together math expressions and normal text by putting the normal text in a string and gluing it to the expression with a `~`.
+
+## Annotations
+
+Adding annotations to plots can be very important and people often do this in programs such as Adobe Illustrator. However, taking the plot to another program makes generating the figure much more complicated and breaks the "reproducible science" method using RMarkdown where any change in the data should easily be converted into updated figures and documents.
+
+One way to add text to a plot is with `geom_text`, which is like `geom_point`, but has a `label` option. For example, you can label the days where each state reached it largest number of deaths per 100k for ages 75-84. The code below first groups the data by state, since you want to use a label for each state. Then, it filters the rows to include only the ones that rank first when sorted into descending order based on `casses_per_100k`. Finally, it uses this data table for the `geom_text`.
+
+```{r}
+maxdeaths_ky_ny_fl = cdc_data |>
+  filter(Age == "75-84 years") |>
+  filter(State %in% c("Kentucky", "New York", "Florida")) |>
+  group_by(State) |> filter(row_number(desc(Deaths_per_100k)) == 1) 
+  # note: row_number here is what is doing the ordering and `desc` tells it to order greatest to least
+
+plot_deaths75to84_ky_ny_fl + geom_point(alpha = 0.3) + 
+  geom_smooth(lwd = 0.5, span = 0.1) +
+  labs(title = "COVID-19 Deaths ages 75-84", x = "Date", y = "Deaths per 100k persons", color = "State") +
+  geom_text(aes(label = c("Florida max", "New York max", "Kentucky max")), data = maxdeaths_ky_ny_fl, show.legend = FALSE)
+```
+
+You can see in the above that you actually need to create a new data table for the text annotations that has the right names for the x and y variables. This is because `ggplot2` **only** understands how to plot dataframes, not other things. This is both the source of its power and limitations. Thus, to put labels on plots with dates on the x-axis, we have to create a data frame with dates as the location we want the text. Likewise, we have to give the y-value as cases per 100k.
+
+```{r}
+#| message: false
+label = tibble(Date = ymd("2022-01-01"), Deaths_per_100k = 250, label = "This is a label in the middle of the plot")
+
+plot_deaths75to84_ky_ny_fl + geom_point(alpha = 0.3) + 
+  geom_smooth(lwd = 0.5, span = 0.1) +
+  labs(title = "COVID-19 Cases", x = "Date", y = "Cases per 100k persons", color = "State") +
+  geom_text(aes(label = label), data = label, vjust = "bottom", hjust = "center", color = "black", show.legend = FALSE)
+```
+
+The text has a "justification" in reference to the (x,y) location of the point you specify. You can set the vertical (`vjust`) and horizontal (`hjust`) justication above using the options below. By setting "bottom" and "center" as above, the coordinate is at the bottom and in the center of the text, which means the text is centered above the point.
+
+![Combinations of horizontal and vertical justification options](assets/just.png)
+
+## Coordinate systems
+
+Coordinate systems in `ggplot2` can be complex. One common operation is to flip the `x` and `y` axes with `coord_flip()` as in examples in previous class sessions.
+
+```{r}
+plot_deaths75to84_ky_ny_fl + geom_point(alpha = 0.3) + 
+  geom_smooth(lwd = 0.5, span = 0.1) +
+  labs(title = "COVID-19 Cases", x = "Date", y = "Cases per 100k persons", color = "State") +
+  coord_flip()
+```
+
+There is a coordinate system for "polar" coordinates that effectively produces a pie chart. Since pie charts are bad (see above), avoid this unless your data really are in polar coordinates.
+
+You can use a coordinate transform to put the `x`, `y`, or both axes on a log scale. The function to accomplish this is `coord_trans()` where function names are given for the `x` and `y` arguments (e.g, `log10`).
+
+```{r}
+library(gapminder)
+
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point(aes(color = continent)) +
+  geom_smooth(method = "lm") +
+  coord_trans(x = "log10", y = "log10")
+```
+
+Above, you can notice that the straight line (since "lm" was used to plot the line) is curved, which indicates that the line was fit on the untransformed data (i.e., a straight line plotted on a log-log plot is curved). Below, you will see how to change the scales to a log scale so that the line is fit on the transformed data.
+
+## Scales 
+
+Scales control how the data maps to aesthetics, which includes whether the data is on an arithmetic or log scale, how data maps to colors, and how the scale values themselves are displayed (i.e., the tick marks). By default, `ggplot2` takes the scatter plot below
+
+```{r}
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point(aes(color = continent)) 
+```
+
+and adds
+
+```{r}
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point(aes(color = continent)) +
+  scale_x_continuous() +
+  scale_y_continuous() +
+  scale_colour_discrete()
+```
+
+You can alter properties of these scales including where tick marks are, the labels of those marks, etc. Modifying the x-tick spacing and getting ride of the y-labels looks like this:
+
+```{r}
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point(aes(color = continent)) +
+  scale_x_continuous(breaks = seq(10000, 100000, by = 10000)) +
+  scale_y_continuous(labels = NULL)
+```
+
+Changing the scales to log values can be done with the `scale_x_log10` and `scale_y_log10` functions.
+
+```{r}
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point(aes(color = continent)) +
+  scale_x_log10() +
+  scale_y_log10() +
+  geom_smooth(method = "lm")
+```
+
+Above, you can see that the fit "lm" line is straight, which means it was applied to the transformed data. Looking into the `coord_trans` docs, we find an explanation for this: 
+
+> The difference between transforming the scales and
+> transforming the coordinate system is that scale
+> transformation occurs BEFORE statistics, and coordinate
+> transformation afterwards.
+
+Finally, you can change the color scale for the discrete variables plotted. One common alternative set of color scales are the "ColorBrewer" (<http://colorbrewer2.org/>) scales that are designed to work well with color blind folks and can be loaded with `library(RColorBrewer)`.
+
+```{r}
+library(RColorBrewer)
+
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point(aes(color = continent)) +
+  scale_x_log10() + scale_y_log10() +
+  scale_colour_brewer(palette = "Dark2")
+```
+
+You can also set the color scale manually, which is nice for making Kentucky blue and Florida orange.
+```{r}
+plot_deaths75to84_ky_ny_fl + geom_point(alpha = 0.3) + 
+  geom_smooth(lwd = 0.5, span = 0.1) +
+  labs(title = "COVID-19 Deaths ages 75-84", x = "Date", y = "Deaths per 100k persons", color = "State") +
+  scale_colour_manual(values = c(Florida = "orange", Kentucky = "blue", `New York` = "red"))
+```
+
+### Zooming
+
+You can "zoom" by either taking a subset of the data and plotting that or by changing the x and y limits in the coordinate system. The latter option is better for really "zooming" into a region whereas the former is better when you care only about that subset. To do the latter,
+
+```{r}
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point(aes(color = continent)) +
+  coord_cartesian(xlim = c(1000, 2000), ylim = c(50, 70))
+```
+
+# Themes
+
+More generally, you can modify non-data elements of the plot with a theme. There are eight themes included with `ggplot2`:
+
+![`ggplot2` themes](assets/ggplot-themes.png)
+
+Applying them just requires adding the specific function:
+
+```{r}
+plot_deaths75to84_ky_ny_fl + geom_point(alpha = 0.3) + 
+  geom_smooth(lwd = 0.5, span = 0.1) +
+  labs(title = "COVID-19 Deaths ages 75-84", x = "Date", y = "Deaths per 100k persons", color = "State") +
+  scale_colour_manual(values = c(Florida = "orange", Kentucky = "blue", `New York` = "red")) +
+  theme_bw()
+```
+
+Hadley Wickham has some text defending the default theme with the gray background. I won't detail his reasons since I think that theme is frankly ugly and the gray background is an example of "chart junk" we just discussed. 
+
+## Claus O. Wilke theme (`cowplot`)
+
+Claus O. Wilke, an evolutionary biologist at UT Austin, has put together a theme that he describes as
+
+> a publication-ready theme for ggplot2, one that requires a minimum amount of fiddling with sizes of axis labels, plot backgrounds, etc.
+
+Once you load the package, you can use the theme.
+
+```{r}
+library(cowplot)
+
+plot_deaths75to84_ky_ny_fl + geom_point(alpha = 0.3) + 
+  geom_smooth(lwd = 0.5, span = 0.1) +
+  labs(title = "COVID-19 Deaths ages 75-84", x = "Date", y = "Deaths per 100k persons", color = "State") +
+  scale_colour_manual(values = c(Florida = "orange", Kentucky = "blue", `New York` = "red")) +
+  theme_cowplot(font_size = 12)
+```
+
+The theme is meant to work well with saving figures (coming in another class session), adding annotations (`cowplot` does not require creating a data table), and placing subplots in arbitrary arrangements in the plot. For more information, check out <https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html>. Wilke also has a book on data visualization <https://clauswilke.com/dataviz/> that might be of interest.
+
+[^1]: Tufte, E.R. "The Visual Display of Quantitative Information". Graphic Press: Cheshire, Connecticut (2001).
+[^2]: Cleveland, W.S. & McGill, R. *Science* **229**, 828–833 (1985).
+
+# Lab ![](assets/beaker.png)
+
+Thursday...
