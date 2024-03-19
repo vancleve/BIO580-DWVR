@@ -162,7 +162,7 @@ plot_deaths75to84_ky_ny_fl + geom_point(alpha = 0.3) +
   geom_text(aes(label = c("Florida max", "New York max", "Kentucky max")), data = maxdeaths_ky_ny_fl, show.legend = FALSE)
 ```
 
-You can see in the above that you actually need to create a new data table for the text annotations that has the right names for the x and y variables. This is because `ggplot2` **only** understands how to plot dataframes, not other things. This is both the source of its power and limitations. Thus, to put labels on plots with dates on the x-axis, we have to create a data frame with dates as the location we want the text. Likewise, we have to give the y-value as cases per 100k.
+You can see in the above that you actually need to create a new data table for the text annotations that has the right names for the x and y variables. This is because `ggplot2` **only** understands how to plot dataframes, not other things. This is both the source of its power and limitations. Thus, to put labels on plots with dates on the x-axis, we have to create a data frame with dates as the location we want the text. Likewise, we have to give the y-value as deaths per 100k.
 
 ```{r}
 #| message: false
@@ -170,7 +170,7 @@ label = tibble(Date = ymd("2022-01-01"), Deaths_per_100k = 250, label = "This is
 
 plot_deaths75to84_ky_ny_fl + geom_point(alpha = 0.3) + 
   geom_smooth(lwd = 0.5, span = 0.1) +
-  labs(title = "COVID-19 Cases", x = "Date", y = "Cases per 100k persons", color = "State") +
+  labs(title = "COVID-19 Deaths ages 75-84", x = "Date", y = "Deaths per 100k persons", color = "State") +
   geom_text(aes(label = label), data = label, vjust = "bottom", hjust = "center", color = "black", show.legend = FALSE)
 ```
 
@@ -185,7 +185,7 @@ Coordinate systems in `ggplot2` can be complex. One common operation is to flip 
 ```{r}
 plot_deaths75to84_ky_ny_fl + geom_point(alpha = 0.3) + 
   geom_smooth(lwd = 0.5, span = 0.1) +
-  labs(title = "COVID-19 Cases", x = "Date", y = "Cases per 100k persons", color = "State") +
+  labs(title = "COVID-19 Deaths ages 75-84", x = "Date", y = "Deaths per 100k persons", color = "State") +
   coord_flip()
 ```
 
