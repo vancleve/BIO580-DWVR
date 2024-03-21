@@ -342,7 +342,10 @@ The theme is meant to work well with saving figures (coming in another class ses
     d. Non-ggplot2 default theme (pick your favorite)
     e. Bonus 1 points: change color of the x and y tick labels to blue.
 
-3.  Find a figure in a scientific paper in your field that you think is poorly designed (e.g., chart junk).
+3.  Describe what might be wrong with the figure below in terms of the design principles discussed this week.
+    ![Chart Junk](assets/time_chart.jpg)
+    
+4.  Find a figure in a scientific paper in your field that you think is poorly designed (e.g., chart junk).
     a. Save the figure and include it as a .jpg or .png with your .qmd and load the figure into your .qmd file as an image.
     b. Describe what is wrong with the figure using graphics principles discussed this week.
     c. Describe how you would fix the figure.
