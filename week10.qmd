@@ -321,4 +321,29 @@ The theme is meant to work well with saving figures (coming in another class ses
 
 # Lab ![](assets/beaker.png)
 
-Thursday...
+### Problems
+
+1.  Create a plot of per capita deaths using the `cdc` COVID-19 dataset below
+    ```{r}
+    #| message: false
+    cdc_data = read_tsv("cdc_covid19_mort_rates_state-age-sex_2020-2023.tsv")
+    ```
+    a. Filter the data to three states of your choice.
+    b. Filter the data to two age groups of your choice and use `facet-grid` to create four subplots, one for each combination of `Age` and `Gender`.
+    c. For each plot, use color to denote each state in the plot.
+    d. Use the `labs` function to add x and y labels.
+    e. Add `geom_text` annotation for the days with the highest death counts for each state.
+    f. Bonus 2 points: add the month in the `geom_text` annotation (e.g., "New York - July") **without** typing it in manually.
+
+2.  Create a plot from any of the datasets we have used previously that includes the following
+    a. Use color to represent the value of some variable in the data.
+    b. Descriptive labels for the axes and title
+    c. Appropriate tick mark breaks and labels (only if defaults are bad)
+    d. Non-ggplot2 default theme (pick your favorite)
+    e. Bonus 1 points: change color of the x and y tick labels to blue.
+
+3.  Find a figure in a scientific paper in your field that you think is poorly designed (e.g., chart junk).
+    a. Save the figure and include it as a .jpg or .png with your .qmd and load the figure into your .qmd file as an image.
+    b. Describe what is wrong with the figure using graphics principles discussed this week.
+    c. Describe how you would fix the figure.
+    d. Bonus 5 points: load in the data and actually fix the figure!
