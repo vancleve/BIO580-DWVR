@@ -312,4 +312,29 @@ One word of warning here is that saving a heat map as a ".pdf" may still result 
 
 # Lab ![](assets/beaker.png)
 
-Thursday...
+### Problems
+
+1.  Create a heat map of the Babak et al. imprinting data:
+    ```{r}
+    #| eval: false
+    imprint = read_excel("babak-etal-2015_imprinted-mouse.xlsx", na = "NaN")
+    ```
+    - Wrangle the data first into a "tidy" format (genes, tissue, and expression as spearate columns).
+    - Use a perceptually uniform color map
+    - Resize the figure so the tick labels are readable
+    - Add appropriate plot title and axes labels
+    - Save the figure as ".pdf" and **include the .pdf** in the **.zip** that you submit
+    
+2.  Load the GWAS data using the commands below:
+    ```{r}
+    #| eval: false
+    gwas = read_tsv("gwas_catalog_v1.0.2-associations_e104_r2021-09-23_no-waist_hip_body_blood_education_math_top100.tsv", na=c("NA", "NR"))
+    gwas = gwas %>% mutate(risk_allele_freq = parse_double(str_extract(gwas$`RISK ALLELE FREQUENCY`, "0\\.\\d+")))
+    ```
+    - Create a 2D density plot (use the `stat_density_2d` function so that unknown values are imputed with a KDE) that plots `RISK ALLELE FREQUENCY` on the x-axis and `PVALUE_MLOG` on the y-axis
+    - Filter to keep "Height" and the three cancer traits in the table and use `facet_wrap` to make a plot for each `DISEASE/TRAIT` (four plots in total).
+    - Use a perceptually uniform color map
+    - Add appropriate plot title and axes labels
+    - Put the y-axis on a log10 scale
+    - Save the figure as ".pdf" and **include the .pdf** in the **.zip** that you submit
+    - What can you say about the difference between the allele frequency of significant SNPs for a disease and for height?
