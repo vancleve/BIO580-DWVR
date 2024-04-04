@@ -287,17 +287,69 @@ macaque_graph %>%
   coord_fixed()
 ```
 
+# Network from bike share data
+
+Let's create a network from the bike share data that we saw earlier in the course. Such a network could consist of the stations as the nodes and the number of trips as the weights of edges between the nodes. So we'll have to create a list of edges where each edge connects two stations with the appropriate weight.
+
+To do this, we first load in the data from the database.
+```{r}
+library(DBI)
+library(dbplyr)
+
+dbcon = dbConnect(RSQLite::SQLite(), "bikedb.sqlite")
+dbcon
+```
+We'll filter the trips to only those that occur on July 4th just as a way to keep the dataset a manageable size.
+```{r}
+july4th = dbcon |>
+  tbl("trips") |>
+  filter(day(start_time) == 4, month(start_time) == 7) |> as_tibble()
+```
+
+Now, we need to create the edge list for each pair of stations. We do this by looping over all the starting stations and ending stations and counting the number of trips in the table.
+```{r}
+#| eval: false
+starts = july4th |> distinct(start_station_id) |> pull()
+ends = july4th |> distinct(end_station_id) |> pull()
+
+edges = tibble(From = character(), To = character(), Weight = numeric())
+
+for (start in starts) {
+  print(start)
+  for (end in ends) {
+    weight = july4th |> filter(start_station_id == start, end_station_id == end) |> nrow()
+    edges = edges |> add_row(From = start, To = end, Weight = weight)
+  }
+}
+edges = edges |> filter(Weight > 0)
+```
+
+That loop takes a bit of time so I've saved a previous run of the loop to a file and we'll read that in and plot the graph
+```{r}
+bike_edges = read_csv("sf_bike_july4_station_edges.csv")
+
+bike_graph = tbl_graph(edges = bike_edges)
+
+bike_graph %>%
+  ggraph(layout = "fr") +
+  geom_edge_link(aes(edge_width=Weight), color="red") +
+  scale_edge_width(range = c(0.1,10)) +
+  geom_node_circle(aes(r=0.02)) + 
+  coord_fixed()
+```
+
+
 # Lab ![](assets/beaker.png)
 
 ### Problems
 
-2. Use the data file `rugosa_social_network.csv`, which describes the social network of the sleepy lizard (*Tiliqua rugosa*)[^4] as an **adjacency matrix**. You may plot using the basic `igraph` functions or the `ggraph` ones. Use `column_to_rownames(var = "ID")` before converting the data frame to a matrix since the graph functions like matrices with rownames.    
+1. Use the data file `rugosa_social_network.csv`, which describes the social network of the sleepy lizard (*Tiliqua rugosa*)[^4] as an **adjacency matrix**. You may plot using the basic `igraph` functions or the `ggraph` ones. Use `column_to_rownames(var = "ID")` before converting the data frame to a matrix since the graph functions like matrices with rownames.    
     - Read in the file (hint: you may need to be careful with which function and/or parameters you use here to get the matrix right, which includes denoting missing values in the matrix).
     - Plot the social network of the sleepy lizard
     - Make the node size proportional to the eigenvalue centrality of the node
     - What is the degree of the most highly connected lizard? Are there multiple lizards with this max degree?
     
-3. Identify the dataset that you would like to use for your project talk
+2. Identify the dataset that you would like to use for your project talk
     - Briefly describe the data
     - Briefly describe each of the figures you would like to make with these data
     - Identify any major hurdles to wrangling or plotting these data
