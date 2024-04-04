@@ -291,10 +291,6 @@ macaque_graph %>%
 
 ### Problems
 
-1. We're going to create our own social network plot based on favorite TV shows. I'll create a speadsheet and gather our top 5 TV shows and count the overlap. This will be our edge weights.
-    - Plot this adjacency matrix as a network
-    - Make the edge widths proportional to the overlap in TV favorites
-
 2. Use the data file `rugosa_social_network.csv`, which describes the social network of the sleepy lizard (*Tiliqua rugosa*)[^4] as an **adjacency matrix**. You may plot using the basic `igraph` functions or the `ggraph` ones. Use `column_to_rownames(var = "ID")` before converting the data frame to a matrix since the graph functions like matrices with rownames.    
     - Read in the file (hint: you may need to be careful with which function and/or parameters you use here to get the matrix right, which includes denoting missing values in the matrix).
     - Plot the social network of the sleepy lizard
