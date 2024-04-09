@@ -164,7 +164,8 @@ ipca = imprint_t |>
   select(-tissue) |> 
   prcomp()
 
-data.frame(tissue=imprint_t$tissue, ipca$x) |> 
+as_tibble(ipca$x) |> 
+  add_column(tissue = imprint_t$tissue, .before = 1) |>
   ggplot(aes(x=PC1, y=PC2)) + 
   geom_point() + 
   geom_text(aes(label=tissue), size=2.5, position=position_jitter(width=2,height=5))
