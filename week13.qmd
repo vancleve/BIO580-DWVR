@@ -200,4 +200,32 @@ These have some advantages in terms of their visual appeal, but they should be u
 
 # Lab ![](assets/beaker.png)
 
-Thursday...
+1.  Using the `gapminder` data:
+    - Perform a principal components analysis using the variables `lifeExp`, `year`, `pop`, and `gdpPercap`. 
+    - Plot all the points on a scatter plot with the the x- and y-axis corresponding to the first two principal components (PC1 and PC2). 
+    - Color the points according to `year`. Set the shape of the point (square, circle, etc) according to `continent`.
+    - What patterns do you observe if any?
+    
+2.  The Our World in Data COVID-19 dataset is perfect for performing a PCA. Use the code below that generates the `owid_total` data table. This contains a set of variables from the OWID dataset and the total deaths per million by the end of the year 2021.
+    ```{r}
+    #| message: false
+    owid_total = 
+      read_csv("owid-covid-data.csv") |>
+      select(location, date, total_deaths_per_million, total_cases_per_million, people_vaccinated_per_hundred,
+             population_density, median_age, male_smokers, cardiovasc_death_rate, diabetes_prevalence, life_expectancy, gdp_per_capita) |> 
+      filter(if_all(everything(), \(x) !is.na(x))) |> 
+      filter(year(date) == 2021, month(date) == 12) |>
+      group_by(location) |>
+      filter(row_number(desc(date)) == 1)
+    ```
+    - Run a PCA including all the variables except `location` and `total_deaths_per_million`. What variables "weigh" the strongest (have the largest absolute value) in the first three principal components?
+    - Use `cbind(owid_total, your_PCA$x)` to generate a new data frame
+    - Use the above data frame to plot countries by their location in the coordinates of PC1 and PC2. Color the points by whether they have great than 1000 total deaths per million. What do you notice about the where the points are with the higher number of total cases? Interpret this in terms of the most important variables in PC1 and PC2.
+    - Adding `geom_text` to label the points by their country (location) name is a nice addition to the plot, but its optional.
+
+3.  The scatter plot grid we created for the blue jay data had many extraneous plots (the diagonal plots and two copies of each plot, x vs y and then y vs x). There were only three scatter plots that we really needed from that 3x3 grid. Using `facet_wrap`, we can plot only these three plots. 
+    - Begin with the `bg` data table that we used that contains the `var_x`, `var_y`, `val_x`, and `val_y` columns.
+    - Create one new column that contains the x,y variable combo for each scatter plot.
+    - Use `filter` to get only the rows that correspond to the three variable combinations you need.
+    - Create scatter plots using `facet_wrap` on the new column you created.
+    - +2 points: use `labeller` is `facet_wrap` to add the correct x and y axis labels for each plot.
