@@ -217,6 +217,7 @@ These have some advantages in terms of their visual appeal, but they should be u
       filter(year(date) == 2021, month(date) == 12) |>
       group_by(location) |>
       filter(row_number(desc(date)) == 1) |>
+      ungroup() |>
       select(-date)
     ```
     - Run a PCA including all the variables except `location` and `total_deaths_per_million`. What variables "weigh" the strongest (have the largest absolute value) in the first three principal components?
