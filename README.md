@@ -273,13 +273,13 @@ as the semester progress.
 | 6    | 02/13 & 02/15 | Joins and databases                                        | [html](https://vancleve.github.io/BIO580-DWVR/week06.html) |
 | 7    | 02/20 & 02/22 | Text manipulation and regular expressions                  | [html](https://vancleve.github.io/BIO580-DWVR/week07.html) |
 | 8    | 02/27 & 02/29 | Introduction to plotting and ggplot2                       | [html](https://vancleve.github.io/BIO580-DWVR/week08.html) |
-| 9    | 03/05 & 03/07 | Plot types in ggplot2                                      |                                                            |
+| 9    | 03/05 & 03/07 | Plot types in ggplot2                                      | [html](https://vancleve.github.io/BIO580-DWVR/week09.html) |
 |      | 03/12 & 03/14 | **Spring Break**                                           |                                                            |
-| 10   | 03/19 & 03/21 | Principles of displaying data & how to modify plots        |                                                            |
-| 11   | 03/26 & 03/28 | Colors and heat maps                                       |                                                            |
-| 12   | 04/02 & 04/04 | Networks                                                   |                                                            |
-| 13   | 04/09 & 04/11 | Visualizing/analyzing lots of data                         |                                                            |
-| 14   | 04/16         | Interactive plots                                          |                                                            |
+| 10   | 03/19 & 03/21 | Principles of displaying data & how to modify plots        | [html](https://vancleve.github.io/BIO580-DWVR/week10.html) |
+| 11   | 03/26 & 03/28 | Colors and heat maps                                       | [html](https://vancleve.github.io/BIO580-DWVR/week11.html) |
+| 12   | 04/02 & 04/04 | Networks                                                   | [html](https://vancleve.github.io/BIO580-DWVR/week12.html) |
+| 13   | 04/09 & 04/11 | Visualizing/analyzing lots of data                         | [html](https://vancleve.github.io/BIO580-DWVR/week13.html) |
+| 14   | 04/16         | Interactive plots                                          | [html](https://vancleve.github.io/BIO580-DWVR/week14.html) |
 |      | 04/18         | Project presentations                                      |                                                            |
 | 15   | 04/23         | Project presentations                                      |                                                            |
 

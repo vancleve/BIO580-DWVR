@@ -1,0 +1,35 @@
+---
+title: ''
+author: "Jeremy Van Cleve"
+date: 16 04 2024
+format: 
+  html:
+    self-contained: true
+---
+  
+
+# Outline for today
+
+- 
+
+```{r}
+library(tidyverse)
+library(plotly)
+```
+
+```{r}
+owid = read_csv("owid-covid-data.csv")
+p = owid |> 
+  filter(location %in% c("United States", "Brazil", "India", "United Kingdom", "Sweden")) |>
+  filter(year(date) == 2021 | year(date) == 2022, !is.na(new_deaths_smoothed_per_million)) |>
+  ggplot(aes(x=date, y=new_deaths_smoothed_per_million)) +
+  geom_line(aes(color=location)) + 
+  labs(x = "Date", y = "Deaths per million persons (smoothed)", color = "State")
+
+ggplotly(p)
+```
+
+
+# Lab ![](assets/beaker.png)
+
+1.  
