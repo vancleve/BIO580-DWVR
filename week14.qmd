@@ -10,26 +10,120 @@ format:
 
 # Outline for today
 
-- 
+- D3 and data journalism
+- Plotly.js
+- Dashboards
+
+# D3 and data journalism
+
+The year is 2012. President Barack Obama is running for re-election on the Democratic ticket and Republican Mitt Romney is running against him. News coverage of the election is constant and news outlets are constantly trying new flashy web experiences to draw in and keep eyeballs on their pages. The New York Times, like many newspapers, was slow to realize the importance of its web content but by 2012 was on the forefront of offering interactive experiences for their readers. 
+
+Enter Mike Bostock, a Ph.D. student with Jeffrey Heer at Stanford. He was tired of the hassle of using Java, Flash, and other cumbersome web technologies to create interactive visualizations. Seeing what these visualizations looked like is hard since modern web browsers don't retain the necessary software to run them, but you can see some of the Flash-based visualizations at the New York Times here: <https://flowingdata.com/2024/01/10/nyt-flash-based-visualizations-work-again/>. The old Java and Flash tech was slow and required plugins that were constant sources of security holes for web browsers. Bostock and collaborators ditched these old tools and used JavaScript, the language of web browsers, Cascading Style Sheets (CSS), and Scalable Vector Graphics (SVGs), to create a JavaScript library for Data-Driven Documents or D3.js. JavaScript, CSS, and SVG were all built into modern web browsers by 2011 and were commonly used by web developers so D3.js was super fast and relatively easy for devs to pick up too.
+
+Bostock started working with the New York Times in 2012 and created some iconic graphics for the 2012 election. For example, the figure below let's one explore presidential election results by state and see how state results have shifted from election to election. 
+  
+[![Election results by state through 2012](assets/nyt_obama_romney_2012.jpg){width=75%}](https://archive.nytimes.com/www.nytimes.com/interactive/2012/10/15/us/politics/swing-history.html)
+
+While D3.js was a huge improvement over previous tools, it still has a steep learning curve to the non-web programmer. Thus, other tools have built on D3.js that allow data scientists familiar with R or Python or Julia to build interactive visualizations. In essence, what these tools do use R or Python or Julia to wrangle the data and create a graphic while the underlying javascript is used to display the graphic within a web browser window, which allows for interactivity. All of that can happen with R, where your interactive plot will open in a web browser window, or within RStudio, where the plot will open in the viewer. Using these tools, you can create an interactive data dashboard where the user can explore data and create their own custom versions of graphics and plots.
+
+# Interactive plots with Plotly.js
+
+> [Plotly.js](https://plotly.com/javascript/) is a high-level, declarative charting library. plotly.js ships with over 40 chart types, including 3D charts, statistical graphs, and SVG maps.
+
+Although Plotly.js can be used to create visualizations on its own, we will use it through an interface within R, <https://plotly-r.com/>. Plotly has its own framework and model for creating graphics that differs substantially from `ggplot` (see Chapter 2.1 and 2.2 here <https://plotly-r.com/>). Conveniently, Plotly also can convert `ggplot` graphics into Plotly without having to interface with Plotly fundamentals directly. For example, let load some COVID-19 hospitalization and mortality data
 
 ```{r}
 library(tidyverse)
 library(plotly)
-```
 
+us_hosps  = read_csv("US_COVID19_Hosps_ByWeek_ByState_20240125.csv")
+us_deaths = read_csv("US_COVID19_Deaths_ByWeek_ByState_20240125.csv") |> 
+  mutate(`Week Ending Date` = mdy(`Week Ending Date`)) # death table dates need conversion
+
+us_hosps_deaths = 
+  us_deaths |> 
+  rename(week_ending_date = `Week Ending Date`, state = State) |> # rename columns so they match across the two tables
+  select(-c(`Data as of`, `Start Date`, `End Date`, Group, Year, Month, `MMWR Week`, Footnote)) |> # get rid of excess columns in deaths table
+  inner_join( # join the two tables together
+    us_hosps |>
+      rename(state_abbrv = state) |> # hosps has states as abbreviations so we'll need to add full state names
+      left_join(tibble(state_abbrv = state.abb, state = state.name) |> 
+                  add_row(state_abbrv = c("USA", "DC", "PR"), state = c("United States", "District of Columbia", "Puerto Rico")))) |>
+  filter(state != "United States")
+```
+Suppose that we wanted to see the hospital admissions for COVID-19 per capita for each state
 ```{r}
-owid = read_csv("owid-covid-data.csv")
-p = owid |> 
-  filter(location %in% c("United States", "Brazil", "India", "United Kingdom", "Sweden")) |>
-  filter(year(date) == 2021 | year(date) == 2022, !is.na(new_deaths_smoothed_per_million)) |>
-  ggplot(aes(x=date, y=new_deaths_smoothed_per_million)) +
-  geom_line(aes(color=location)) + 
-  labs(x = "Date", y = "Deaths per million persons (smoothed)", color = "State")
-
-ggplotly(p)
+p = us_hosps_deaths |> 
+  ggplot(aes(x = week_ending_date, y = total_adm_all_covid_confirmed_past_7days_per_100k)) +
+  geom_line(aes(color=state), show.legend = FALSE)
+p
+```
+Definitely some strong common trends, but wouldn't it be nice to be able to zoom in interactively on the plot? We can do this with Plotly. We simply apply the `ggplotly` function to our graphic. 
+```{r}
+ggplotly(p, dynamicTicks = TRUE)
+```
+Now the graphic has a toolbar where we can select zoom, pan, and reset axes. Bringing the cursor over a line in the plot calls up a popup with the underlying data for the x,y location of that data. Double clicking in the plot pane also resets the axes. Clicking on the state names in the legend hides or reveals each state. The `dynamicTicks = TRUE` option also nices let's the ticks change when we zoom in so that the x and y information is more granular. You can also change which buttons are visible in the widget:
+```{r}
+ ggplotly(p, dynamicTicks = TRUE) |> 
+  config(displaylogo = FALSE, modeBarButtonsToRemove = list('zoom2d','pan2d','lasso2d', 'select2d','zoomIn2d',
+                              'zoomOut2d','autoScale2d','hoverClosestCartesian',
+                              'toggleSpikelines','hoverCompareCartesian'))
 ```
 
+Plotly also has a number of animation features. The simplest case is where we want some variable to change value during the animation. The `ggplotly` function allows for this through `frame = variable` in `aes` where `variable` is the variable you want to change over the course of the animation. For example, instead of `color = state` in the plot above, we can set `frame = state`:
+```{r}
+p = us_hosps_deaths |> 
+  ggplot(aes(x = week_ending_date, y = total_adm_all_covid_confirmed_past_7days_per_100k)) +
+  geom_line(aes(frame=state), show.legend = FALSE)
+ggplotly(p, dynamicTicks = TRUE)
+```
+```{r}
+ggplotly(p, dynamicTicks = TRUE) |>
+  animation_opts(1000, easing = "elastic", redraw = FALSE) |>
+  animation_button(x = 1, xanchor = "right", y = 0, yanchor = "bottom") |>
+  animation_slider(currentvalue = list(prefix = "State ", font = list(color="red"))
+  )
+```
 
-# Lab ![](assets/beaker.png)
+## Selecting and linking plots
 
-1.  
+Selecting individual plot elements is all well and good, but a complex interactive plot or dashboard will allow for you to select multiple elements and for multiple consequences for those selections. Plotly allows for selecting and highlighting with the `highlight` function. Essentially, you create a new Plotly object based on the data table where this object knows which variable is going to be used to select by. In our case, we can select each timeseries by state.
+```{r}
+filter_states <- highlight_key(us_hosps_deaths, ~state, "Select a state")
+
+p = filter_states |> 
+  ggplot(aes(x = week_ending_date, y = total_adm_all_covid_confirmed_past_7days_per_100k)) +
+  geom_line(aes(group=state))
+
+highlight(ggplotly(p, tooltip = "state"), selectize = TRUE)
+```
+The real magic is linking the selection to another plot element or statistic. We do this below for a histogram of the hospital cases that changes to whatever states are selected.
+```{r}
+#| fig-cap: Something is off about the state selection window...
+base = filter_states |> plot_ly(color = I("black")) |> group_by(state)
+
+hist <- add_histogram(base,
+  x = ~total_adm_all_covid_confirmed_past_7days_per_100k, 
+  histnorm = "probability density"
+)
+
+gg = base |> 
+  ggplot(aes(x = week_ending_date, y = total_adm_all_covid_confirmed_past_7days_per_100k)) +
+  geom_line(aes(group=state))
+
+subplot(gg, hist, nrows = 2) |>
+  layout(barmode = "overlay", showlegend = FALSE) |>
+  highlight(
+    selectize = TRUE, 
+    selected = attrs_selected(opacity = 0.3)
+  )
+```
+Create a data dashboard involves the construction and linking of multiple plot and selection elements that slice and display the data interactively. This give the data scientist a huge amount of flexibility in allowing the user to explore the data but it comes at the cost of steeply increased code complexity.
+
+# Dashboards
+
+Producing dashboards is a sophisticated topic that we cannot cover in detail here. Instead, I will sketch out some places to go to find out more. 
+
+- [flexdashboard](https://pkgs.rstudio.com/flexdashboard/). This uses a RMarkdown document to create the layout and specify the charts and graphs.
+- [Shiny](https://mastering-shiny.org/). Shiny is a framework for creating web applications using R code. It is powerful but has a steep learning curve. You will have to learn about web servers, the basics of a user interface, and reactive programming. Nevertheless, whatever you can dream up can likely be implemented in Shiny.
+
