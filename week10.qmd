@@ -329,7 +329,7 @@ The theme is meant to work well with saving figures (coming in another class ses
     cdc_data = read_tsv("cdc_covid19_mort_rates_state-age-sex_2020-2023.tsv")
     ```
     a. Filter the data to three states of your choice.
-    b. Filter the data to two age groups of your choice and use `facet-grid` to create four subplots, one for each combination of `Age` and `Gender`.
+    b. Filter the data to two age groups of your choice and use `facet_grid` to create four subplots, one for each combination of `Age` and `Gender`.
     c. For each plot, use color to denote each state in the plot.
     d. Use the `labs` function to add x and y labels.
     e. Add `geom_text` annotation for the days with the highest death counts for each state.
